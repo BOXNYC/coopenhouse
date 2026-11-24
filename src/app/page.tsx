@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/Button";
 import { BoltIcon, BuildingIcon, ClipboardIcon, IdCardIcon, ShieldCheckIcon } from "@/components/ui/icons";
 import { OFFER_META } from "@/components/ui/OfferChip";
@@ -16,7 +17,10 @@ export default function Landing() {
     <div className="flex-1">
       <header className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4">
         <Logo />
-        <Link href="/login" className="text-sm font-semibold text-brand-700 hover:underline">Sign in</Link>
+        <div className="flex items-center gap-4">
+          <ThemeToggle showLabels={false} />
+          <Link href="/login" className="text-sm font-semibold text-brand-700 hover:underline">Sign in</Link>
+        </div>
       </header>
 
       <section className="mx-auto max-w-5xl px-5 pb-12 pt-8 md:pt-16">
@@ -64,9 +68,9 @@ export default function Landing() {
             </div>
           ))}
         </div>
-        <div className="mt-10 rounded-card bg-brand-800 p-6 text-white md:p-8">
+        <div className="mt-10 rounded-card bg-[#0b4250] p-6 text-white md:p-8">
           <h2 className="text-xl font-semibold">See both sides in a minute</h2>
-          <p className="mt-1 text-brand-100">Sign in as a Lister or a Host to explore. No account needed.</p>
+          <p className="mt-1 text-[#d0e6e7]">Sign in as a Lister or a Host to explore. No account needed.</p>
           <Button href="/login" variant="accent" className="mt-4">Pick a demo login</Button>
         </div>
       </section>

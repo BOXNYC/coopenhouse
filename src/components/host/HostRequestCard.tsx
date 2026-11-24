@@ -65,7 +65,7 @@ export function HostRequestCard({
         </div>
       )}
       {restrictedReason && (
-        <p className="mt-2 flex items-start gap-1.5 rounded-lg bg-black/5 px-2.5 py-1.5 text-xs text-ink-soft">
+        <p className="mt-2 flex items-start gap-1.5 rounded-lg bg-ink/5 px-2.5 py-1.5 text-xs text-ink-soft">
           <LockIcon size={13} className="mt-0.5 shrink-0" />
           Restricted: {restrictedReason}
         </p>

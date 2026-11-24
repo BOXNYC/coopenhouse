@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Logo } from "@/components/Logo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Avatar } from "@/components/ui/Avatar";
 import { VerificationBadges } from "@/components/ui/Badge";
 import { Spinner } from "@/components/ui/Button";
@@ -30,7 +31,10 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-5 py-8">
-      <Logo />
+      <div className="flex items-center justify-between">
+        <Logo />
+        <ThemeToggle showLabels={false} />
+      </div>
       <h1 className="mt-8 text-3xl font-semibold tracking-tight text-ink">Welcome</h1>
       <p className="mt-2 text-ink-soft">Choose a login to explore. Feel free to click around.</p>
 

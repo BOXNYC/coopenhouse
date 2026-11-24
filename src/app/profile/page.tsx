@@ -48,7 +48,7 @@ export default function ProfilePage() {
                             <button
                               key={i}
                               onClick={() => save.mutate(currentUser.id, { days: on ? avail.data!.days.filter((x) => x !== i) : [...avail.data!.days, i] })}
-                              className={cn("h-10 flex-1 rounded-lg text-sm font-semibold transition", on ? "bg-brand-700 text-white" : "bg-black/[0.06] text-muted")}
+                              className={cn("h-10 flex-1 rounded-lg text-sm font-semibold transition", on ? "bg-brand-700 text-white" : "bg-ink/[0.06] text-muted")}
                               aria-pressed={on}
                             >
                               {d}

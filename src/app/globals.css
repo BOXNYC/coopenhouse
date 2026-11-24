@@ -48,8 +48,55 @@
   --shadow-pop: 0 12px 40px rgb(16 36 43 / 0.18);
 }
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 :root {
   color-scheme: light;
+}
+
+/* Dark palette: same token names, remapped. Tints (-50/-100) become deep surfaces, strong shades (-600/-900) become light. */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-ink: #e9f1f3;
+  --color-ink-soft: #b5c7cd;
+  --color-muted: #8aa0a7;
+  --color-paper: #0b161a;
+  --color-surface: #13242a;
+  --color-line: #233a43;
+  --color-line-strong: #31505b;
+
+  --color-brand-50: #0f2a31;
+  --color-brand-100: #12363f;
+  --color-brand-200: #1f5460;
+  --color-brand-300: #3f8c9a;
+  --color-brand-500: #3a9bb0;
+  --color-brand-600: #3294a9;
+  --color-brand-700: #2d8ea3;
+  --color-brand-800: #9fd3de;
+  --color-brand-900: #c6e8ef;
+
+  --color-accent-50: #33200f;
+  --color-accent-100: #4a2d14;
+  --color-accent-500: #ee8f55;
+  --color-accent-600: #e07a3f;
+  --color-accent-700: #f2a373;
+
+  --color-success-50: #0f2b1b;
+  --color-success-600: #2fa862;
+  --color-success-700: #6fd39a;
+  --color-warn-50: #33270c;
+  --color-warn-600: #d99a2b;
+  --color-warn-700: #f0c36b;
+  --color-danger-50: #35161a;
+  --color-danger-600: #e05a4b;
+  --color-danger-700: #f59a8f;
+  --color-violet-50: #231f3a;
+  --color-violet-600: #9d8ef0;
+  --color-sky-50: #14263a;
+  --color-sky-600: #6aa8e6;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 16px rgb(0 0 0 / 0.25);
+  --shadow-pop: 0 12px 40px rgb(0 0 0 / 0.55);
 }
 
 html {
@@ -87,3 +134,7 @@ body {
 /* Host map mode: the map is full-bleed, so the app header gives way to the floating controls. */
 body.map-mode header.sticky { display: none; }
 body.map-mode .mapboxgl-ctrl-top-right { top: 8.5rem; }
+
+/* Mapbox popups/controls on the dark theme */
+html[data-theme="dark"] .mapboxgl-ctrl-group { background: var(--color-surface); }
+html[data-theme="dark"] .mapboxgl-ctrl-group button .mapboxgl-ctrl-icon { filter: invert(1); }

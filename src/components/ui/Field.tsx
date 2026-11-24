@@ -2,7 +2,7 @@ import { useId, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttribu
 import { cn } from "@/lib/cn";
 
 const control =
-  "w-full rounded-xl border bg-surface px-3.5 text-[15px] text-ink placeholder:text-muted/70 transition focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 disabled:bg-black/5";
+  "w-full rounded-xl border bg-surface px-3.5 text-[15px] text-ink placeholder:text-muted/70 transition focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 disabled:bg-ink/5";
 
 export function Field({ label, hint, error, optional, children, className, htmlFor }: { label?: string; hint?: string; error?: string; optional?: boolean; children: ReactNode; className?: string; htmlFor?: string }) {
   return (

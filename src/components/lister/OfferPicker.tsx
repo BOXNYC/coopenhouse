@@ -70,7 +70,7 @@ function Quick({ options, current, format, onPick }: { options: number[]; curren
   return (
     <div className="flex flex-wrap gap-1.5 pt-1">
       {options.map((n) => (
-        <button key={n} type="button" onClick={() => onPick(n)} className={cn("rounded-full px-3 py-1 text-xs font-medium", current === String(n) ? "bg-brand-700 text-white" : "bg-black/5 text-ink-soft hover:bg-black/10")}>
+        <button key={n} type="button" onClick={() => onPick(n)} className={cn("rounded-full px-3 py-1 text-xs font-medium", current === String(n) ? "bg-brand-700 text-white" : "bg-ink/5 text-ink-soft hover:bg-ink/10")}>
           {format(n)}
         </button>
       ))}

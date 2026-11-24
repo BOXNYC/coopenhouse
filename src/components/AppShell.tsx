@@ -9,6 +9,7 @@ import { useNotifications } from "@/lib/hooks";
 import { relativeTime } from "@/lib/format";
 import type { ActiveRole } from "@/lib/types";
 import { Logo } from "./Logo";
+import { ThemeToggle } from "./ThemeToggle";
 import { Avatar } from "./ui/Avatar";
 import { Badge } from "./ui/Badge";
 import { Modal } from "./ui/Modal";
@@ -120,7 +121,7 @@ function Shell({ children, title, subtitle, back, actions }: Omit<AppShellProps,
           {items.map((it) => {
             const active = it.match(pathname);
             return (
-              <Link key={it.href} href={it.href} className={cn("flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition", active ? "bg-brand-50 text-brand-800" : "text-ink-soft hover:bg-black/5", it.primary && !active && "text-accent-700")}>
+              <Link key={it.href} href={it.href} className={cn("flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition", active ? "bg-brand-50 text-brand-800" : "text-ink-soft hover:bg-ink/5", it.primary && !active && "text-accent-700")}>
                 <it.Icon size={20} />
                 {it.label === "New" ? "New request" : it.label}
               </Link>
@@ -135,10 +136,11 @@ function Shell({ children, title, subtitle, back, actions }: Omit<AppShellProps,
               <Badge tone={role === "lister" ? "brand" : "accent"} size="sm">{role === "lister" ? "Lister" : "Host"}</Badge>
             </div>
           </div>
-          <button onClick={doSwitch} className="mt-3 flex w-full items-center gap-2 rounded-lg px-2 py-2 text-sm text-ink-soft hover:bg-black/5">
+          <ThemeToggle className="mt-3 w-full justify-between" showLabels={false} />
+          <button onClick={doSwitch} className="mt-2 flex w-full items-center gap-2 rounded-lg px-2 py-2 text-sm text-ink-soft hover:bg-ink/5">
             <SwapIcon size={16} /> Switch to {otherRoleLabel} demo
           </button>
-          <button onClick={doLogout} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-sm text-ink-soft hover:bg-black/5">
+          <button onClick={doLogout} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-sm text-ink-soft hover:bg-ink/5">
             <LogoutIcon size={16} /> Sign out
           </button>
         </div>
@@ -148,7 +150,7 @@ function Shell({ children, title, subtitle, back, actions }: Omit<AppShellProps,
         <header className="sticky top-0 z-30 border-b border-line bg-paper/90 backdrop-blur">
           <div className="mx-auto flex h-14 w-full max-w-3xl items-center gap-2 px-4">
             {back ? (
-              <Link href={back} aria-label="Back" className="-ml-2 rounded-full p-2 text-ink-soft hover:bg-black/5">
+              <Link href={back} aria-label="Back" className="-ml-2 rounded-full p-2 text-ink-soft hover:bg-ink/5">
                 <ChevronLeftIcon size={22} />
               </Link>
             ) : (
@@ -161,7 +163,7 @@ function Shell({ children, title, subtitle, back, actions }: Omit<AppShellProps,
               {subtitle && <p className="truncate text-xs text-muted">{subtitle}</p>}
             </div>
             {actions}
-            <button onClick={openBell} aria-label={`Notifications${unread ? `, ${unread} unread` : ""}`} className="relative rounded-full p-2 text-ink-soft hover:bg-black/5">
+            <button onClick={openBell} aria-label={`Notifications${unread ? `, ${unread} unread` : ""}`} className="relative rounded-full p-2 text-ink-soft hover:bg-ink/5">
               <BellIcon size={22} />
               {unread > 0 && <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent-500 px-1 text-[10px] font-bold text-white">{unread}</span>}
             </button>
@@ -180,13 +182,14 @@ function Shell({ children, title, subtitle, back, actions }: Omit<AppShellProps,
                         <p className="text-xs text-muted">Signed in as {role === "lister" ? "Lister" : "Host"}</p>
                       </div>
                     </div>
-                    <Link href="/profile" className="flex items-center gap-2 rounded-lg px-2 py-2.5 text-sm hover:bg-black/5">
+                    <div className="px-2 pb-2"><ThemeToggle className="w-full justify-between" /></div>
+                    <Link href="/profile" className="flex items-center gap-2 rounded-lg px-2 py-2.5 text-sm hover:bg-ink/5">
                       <UserIcon size={16} /> Profile
                     </Link>
-                    <button onClick={doSwitch} className="flex w-full items-center gap-2 rounded-lg px-2 py-2.5 text-sm hover:bg-black/5">
+                    <button onClick={doSwitch} className="flex w-full items-center gap-2 rounded-lg px-2 py-2.5 text-sm hover:bg-ink/5">
                       <SwapIcon size={16} /> Switch to {otherRoleLabel} demo
                     </button>
-                    <button onClick={doLogout} className="flex w-full items-center gap-2 rounded-lg px-2 py-2.5 text-sm hover:bg-black/5">
+                    <button onClick={doLogout} className="flex w-full items-center gap-2 rounded-lg px-2 py-2.5 text-sm hover:bg-ink/5">
                       <LogoutIcon size={16} /> Sign out
                     </button>
                   </div>
@@ -234,7 +237,7 @@ function Shell({ children, title, subtitle, back, actions }: Omit<AppShellProps,
           <ul className="-mx-2 divide-y divide-line">
             {notes.data.map((n) => (
               <li key={n.id}>
-                <Link href={notePath(n.requestId)} onClick={() => setBell(false)} className="block rounded-lg px-2 py-3 hover:bg-black/5">
+                <Link href={notePath(n.requestId)} onClick={() => setBell(false)} className="block rounded-lg px-2 py-3 hover:bg-ink/5">
                   <div className="flex items-start gap-2">
                     {!n.read && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent-500" />}
                     <div className="min-w-0">

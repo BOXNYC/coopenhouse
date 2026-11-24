@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import type { Map as MapboxMap } from "mapbox-gl";
 import { cn } from "@/lib/cn";
 import { LockIcon } from "@/components/ui/icons";
+import { useTheme } from "@/lib/theme";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 const MILES_PER_DEG_LAT = 69;
@@ -45,6 +46,7 @@ export function ListingMap({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapboxMap | null>(null);
+  const { resolved } = useTheme();
 
   // Deterministic offset so the approximate circle doesn't sit exactly on the house.
   const h = hash(id);
@@ -63,7 +65,7 @@ export function ListingMap({
       mapboxgl.accessToken = TOKEN;
       map = new mapboxgl.Map({
         container: ref.current,
-        style: "mapbox://styles/mapbox/light-v11",
+        style: `mapbox://styles/mapbox/${resolved}-v11`,
         center: [cLng, cLat],
         zoom: precise ? 15 : 13.4,
         cooperativeGestures: true,
@@ -87,10 +89,10 @@ export function ListingMap({
       map?.remove();
       mapRef.current = null;
     };
-  }, [cLat, cLng, precise]);
+  }, [cLat, cLng, precise, resolved]);
 
   return (
-    <div className={cn("relative h-48 overflow-hidden bg-[#eaf1ee]", className)}>
+    <div className={cn("relative h-48 overflow-hidden bg-[#eaf1ee] dark:bg-[#10242b]", className)}>
       {TOKEN ? (
         // mapbox-gl.css forces `position: relative` on the map element, so size it via a wrapper.
         <div className="absolute inset-0">
@@ -111,7 +113,7 @@ export function ListingMap({
         </svg>
       )}
       {!precise && (
-        <p className="pointer-events-none absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-medium text-brand-800 shadow-sm">
+        <p className="pointer-events-none absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-surface/95 px-2.5 py-1 text-[11px] font-medium text-brand-800 shadow-sm">
           <LockIcon size={12} /> Approximate area. Exact pin unlocks when you apply.
         </p>
       )}

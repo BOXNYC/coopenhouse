@@ -23,7 +23,7 @@ export function DemoControls({ req, now, offsetMs, setOffsetMs }: { req: OpenHou
       <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left">
         <span className="flex items-center gap-2 text-sm font-medium text-ink-soft">
           <SlidersIcon size={16} /> Demo controls
-          <span className="rounded-full bg-black/5 px-2 py-0.5 text-[11px] font-normal text-muted">reviewer only</span>
+          <span className="rounded-full bg-ink/5 px-2 py-0.5 text-[11px] font-normal text-muted">reviewer only</span>
         </span>
         <ChevronDownIcon size={16} className={cn("text-muted transition-transform", open && "rotate-180")} />
       </button>

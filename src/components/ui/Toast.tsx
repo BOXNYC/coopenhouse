@@ -45,7 +45,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
       <div className="pointer-events-none fixed inset-x-0 bottom-24 z-[60] flex flex-col items-center gap-2 px-4 md:bottom-6" aria-live="polite">
         {items.map((t) => (
-          <div key={t.id} className="pointer-events-auto flex w-full max-w-sm animate-pop-in items-start gap-3 rounded-xl bg-ink px-4 py-3 text-white shadow-pop">
+          <div key={t.id} className="pointer-events-auto flex w-full max-w-sm animate-pop-in items-start gap-3 rounded-xl border border-white/10 bg-[#10242b] px-4 py-3 text-white shadow-pop">
             <span className={cn("mt-0.5", t.tone === "success" && "text-success-600 brightness-150", t.tone === "error" && "text-danger-600 brightness-150", t.tone === "info" && "text-brand-200")}>
               {t.tone === "success" ? <CheckCircleIcon size={18} /> : t.tone === "error" ? <AlertIcon size={18} /> : <InfoIcon size={18} />}
             </span>

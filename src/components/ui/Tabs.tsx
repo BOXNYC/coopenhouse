@@ -9,7 +9,7 @@ export interface TabItem<T extends string = string> {
 
 export function Tabs<T extends string>({ tabs, value, onChange, className, fullWidth = true }: { tabs: TabItem<T>[]; value: T; onChange: (id: T) => void; className?: string; fullWidth?: boolean }) {
   return (
-    <div role="tablist" className={cn("inline-flex rounded-xl bg-black/[0.06] p-1", fullWidth && "w-full", className)}>
+    <div role="tablist" className={cn("inline-flex rounded-xl bg-ink/[0.06] p-1", fullWidth && "w-full", className)}>
       {tabs.map((t) => {
         const active = t.id === value;
         return (
@@ -25,7 +25,7 @@ export function Tabs<T extends string>({ tabs, value, onChange, className, fullW
             )}
           >
             {t.label}
-            {t.count !== undefined && <span className={cn("rounded-full px-1.5 text-[11px]", active ? "bg-brand-50 text-brand-800" : "bg-black/5")}>{t.count}</span>}
+            {t.count !== undefined && <span className={cn("rounded-full px-1.5 text-[11px]", active ? "bg-brand-50 text-brand-800" : "bg-ink/5")}>{t.count}</span>}
           </button>
         );
       })}

@@ -2,7 +2,7 @@ import { cn } from "@/lib/cn";
 
 export function Logo({ className, light }: { className?: string; light?: boolean }) {
   return (
-    <span className={cn("inline-flex items-center gap-2 font-semibold tracking-tight", light ? "text-white" : "text-brand-700", className)}>
+    <span className={cn("inline-flex items-center gap-2 font-semibold tracking-tight", light ? "text-white" : "text-brand-700 dark:text-brand-900", className)}>
       <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M4 11l8-7 8 7" />
         <path d="M6 10v10h12V10" />

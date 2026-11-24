@@ -82,7 +82,7 @@ function PhotoPlaceholder({ count, onAdd, onRemove, max = 8, label }: { count: n
           </div>
         ))}
         {count < max && (
-          <button type="button" onClick={onAdd} className="flex h-16 w-16 flex-col items-center justify-center gap-0.5 rounded-xl border border-dashed border-line-strong text-[11px] text-muted hover:bg-black/[0.03]" aria-label={label}>
+          <button type="button" onClick={onAdd} className="flex h-16 w-16 flex-col items-center justify-center gap-0.5 rounded-xl border border-dashed border-line-strong text-[11px] text-muted hover:bg-ink/[0.03]" aria-label={label}>
             <PlusIcon size={16} />
             Photo
           </button>
@@ -236,7 +236,7 @@ function VisitorCapture({ draft, setDraft, signInNote }: { draft: Draft; setDraf
               </div>
               <span className="flex shrink-0 items-center gap-1">
                 <Badge tone={l.unrepresented ? "accent" : "neutral"} size="sm">{l.unrepresented ? "Unrepresented" : "Has agent"}</Badge>
-                <button type="button" aria-label={`Remove ${l.name}`} className="rounded-full p-1.5 text-muted hover:bg-black/5" onClick={() => setDraft((d) => ({ ...d, leads: d.leads.filter((_, j) => j !== i) }))}>
+                <button type="button" aria-label={`Remove ${l.name}`} className="rounded-full p-1.5 text-muted hover:bg-ink/5" onClick={() => setDraft((d) => ({ ...d, leads: d.leads.filter((_, j) => j !== i) }))}>
                   <XIcon size={14} />
                 </button>
               </span>

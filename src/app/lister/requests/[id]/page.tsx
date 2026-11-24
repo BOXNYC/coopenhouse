@@ -75,7 +75,7 @@ function Messages({ request, hostName, userId }: { request: OpenHouseRequest; ho
             const mine = m.senderId === userId;
             return (
               <div key={m.id} className={cn("flex flex-col", mine ? "items-end" : "items-start")}>
-                <p className={cn("max-w-[85%] rounded-2xl px-3.5 py-2 text-sm", mine ? "rounded-br-md bg-brand-700 text-white" : "rounded-bl-md bg-black/[0.06] text-ink")}>{m.text}</p>
+                <p className={cn("max-w-[85%] rounded-2xl px-3.5 py-2 text-sm", mine ? "rounded-br-md bg-brand-700 text-white" : "rounded-bl-md bg-ink/[0.06] text-ink")}>{m.text}</p>
                 <span className="mt-0.5 text-[11px] text-muted">{mine ? "You" : hostName.split(" ")[0]} · {relativeTime(m.sentAt)}</span>
               </div>
             );

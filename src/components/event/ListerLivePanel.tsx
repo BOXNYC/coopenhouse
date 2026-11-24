@@ -61,7 +61,7 @@ export function ListerLivePanel({ ctx }: { ctx: EventCtx }) {
         <p className="mt-1 text-sm text-ink-soft">It&apos;s been {Math.floor(lateMs / MIN)} minutes since the start. We&apos;ve already pinged them. Call to find out what&apos;s happening, or reopen the request for another host.</p>
         <div className="mt-3 grid grid-cols-2 gap-2">
           {other ? (
-            <a href={`tel:${other.phone}`} aria-label={`Call ${other.name} at ${formatPhone(other.phone)}`} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 text-[15px] font-semibold text-white hover:bg-brand-800">
+            <a href={`tel:${other.phone}`} aria-label={`Call ${other.name} at ${formatPhone(other.phone)}`} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-brand-700 px-4 text-[15px] font-semibold text-white hover:brightness-110">
               <PhoneIcon size={16} /> Call host
             </a>
           ) : (

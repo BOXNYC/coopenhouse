@@ -8,7 +8,7 @@ export function Avatar({ user, size = "md", className, ring }: { user: Pick<User
     <span
       role="img"
       aria-label={user.name}
-      className={cn("inline-flex shrink-0 items-center justify-center rounded-full font-semibold text-white", ring && "ring-2 ring-white", sizes[size], className)}
+      className={cn("inline-flex shrink-0 items-center justify-center rounded-full font-semibold text-white", ring && "ring-2 ring-surface", sizes[size], className)}
       style={{ backgroundColor: user.avatarColor }}
     >
       {user.initials}
@@ -24,7 +24,7 @@ export function AvatarStack({ users, max = 3, size = "sm" }: { users: Pick<User,
       {shown.map((u, i) => (
         <Avatar key={i} user={u} size={size} ring />
       ))}
-      {extra > 0 && <span className={cn("inline-flex items-center justify-center rounded-full bg-line text-ink-soft font-semibold ring-2 ring-white", sizes[size])}>+{extra}</span>}
+      {extra > 0 && <span className={cn("inline-flex items-center justify-center rounded-full bg-line text-ink-soft font-semibold ring-2 ring-surface", sizes[size])}>+{extra}</span>}
     </span>
   );
 }

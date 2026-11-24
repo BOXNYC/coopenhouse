@@ -59,13 +59,13 @@ export function ChecklistCard({ ctx }: { ctx: EventCtx }) {
   return (
     <Card>
       <SectionTitle action={<span className="text-xs text-muted">{done}/{req.checklist.length} done</span>}>Handoff checklist</SectionTitle>
-      <div className="mb-3 h-1.5 overflow-hidden rounded-full bg-black/[0.07]" role="progressbar" aria-valuemin={0} aria-valuemax={req.checklist.length} aria-valuenow={done} aria-label="Checklist progress">
+      <div className="mb-3 h-1.5 overflow-hidden rounded-full bg-ink/[0.07]" role="progressbar" aria-valuemin={0} aria-valuemax={req.checklist.length} aria-valuenow={done} aria-label="Checklist progress">
         <div className="h-full rounded-full bg-brand-500 transition-all" style={{ width: `${req.checklist.length ? (done / req.checklist.length) * 100 : 0}%` }} />
       </div>
       <ul className="space-y-1">
         {req.checklist.map((c) => (
           <li key={c.id}>
-            <label className={cn("flex min-h-11 items-center gap-3 rounded-lg px-1 py-1.5", editable && "cursor-pointer hover:bg-black/[0.03]")}>
+            <label className={cn("flex min-h-11 items-center gap-3 rounded-lg px-1 py-1.5", editable && "cursor-pointer hover:bg-ink/[0.03]")}>
               <input
                 type="checkbox"
                 className="h-5 w-5 shrink-0 accent-brand-700"
@@ -128,7 +128,7 @@ export function EmergencyContactCard({ ctx }: { ctx: EventCtx }) {
           <p className="truncate font-medium text-ink">{ec.name}</p>
           <p className="text-sm text-ink-soft">{formatPhone(ec.phone)}</p>
         </div>
-        <a href={`tel:${ec.phone}`} className="inline-flex h-11 items-center gap-2 rounded-xl bg-brand-700 px-4 text-[15px] font-semibold text-white hover:bg-brand-800" aria-label={`Call ${ec.name}`}>
+        <a href={`tel:${ec.phone}`} className="inline-flex h-11 items-center gap-2 rounded-xl bg-brand-700 px-4 text-[15px] font-semibold text-white hover:brightness-110" aria-label={`Call ${ec.name}`}>
           <PhoneIcon size={16} /> Call
         </a>
       </div>

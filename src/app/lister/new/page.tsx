@@ -87,7 +87,7 @@ function Toggle({ checked, onChange, label, desc }: { checked: boolean; onChange
         <span className="block text-sm font-semibold text-ink">{label}</span>
         {desc && <span className="block text-xs text-muted">{desc}</span>}
       </span>
-      <span className={cn("relative h-6 w-11 shrink-0 rounded-full transition", checked ? "bg-brand-700" : "bg-black/20")}>
+      <span className={cn("relative h-6 w-11 shrink-0 rounded-full transition", checked ? "bg-brand-700" : "bg-ink/20")}>
         <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all", checked ? "left-[22px]" : "left-0.5")} />
       </span>
     </button>

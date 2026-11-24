@@ -11,7 +11,7 @@ export function Stepper({ steps, current, className, compact }: { steps: string[
         return (
           <li key={label} className={cn("flex items-center", i < steps.length - 1 && "flex-1")} aria-current={active ? "step" : undefined}>
             <span className="flex flex-col items-center gap-1">
-              <span className={cn("flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold", done && "bg-brand-700 text-white", active && "bg-accent-500 text-white ring-4 ring-accent-100", !done && !active && "bg-black/[0.07] text-muted")}>
+              <span className={cn("flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold", done && "bg-brand-700 text-white", active && "bg-accent-500 text-white ring-4 ring-accent-100", !done && !active && "bg-ink/[0.07] text-muted")}>
                 {done ? <CheckIcon size={14} /> : i + 1}
               </span>
               {!compact && <span className={cn("max-w-16 text-center text-[11px] leading-tight", active ? "font-semibold text-ink" : "text-muted")}>{label}</span>}

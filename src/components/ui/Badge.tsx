@@ -6,7 +6,7 @@ import { BuildingIcon, IdCardIcon, ShieldCheckIcon } from "./icons";
 export type Tone = "neutral" | "brand" | "accent" | "success" | "warn" | "danger" | "violet" | "sky";
 
 export const toneClasses: Record<Tone, string> = {
-  neutral: "bg-black/5 text-ink-soft",
+  neutral: "bg-ink/5 text-ink-soft",
   brand: "bg-brand-50 text-brand-800",
   accent: "bg-accent-50 text-accent-700",
   success: "bg-success-50 text-success-700",
@@ -40,7 +40,7 @@ export function VerificationBadge({ kind, verified = true, compact }: { kind: Ba
       className={cn(
         "inline-flex items-center gap-1 rounded-full font-medium whitespace-nowrap",
         compact ? "px-1.5 py-0.5 text-[11px]" : "px-2.5 py-1 text-xs",
-        verified ? "bg-success-50 text-success-700" : "bg-black/5 text-muted line-through decoration-muted/40",
+        verified ? "bg-success-50 text-success-700" : "bg-ink/5 text-muted line-through decoration-muted/40",
       )}
     >
       <Icon size={compact ? 13 : 15} />

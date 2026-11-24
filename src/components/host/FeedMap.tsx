@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import type { GeoJSONSource, Map as MapboxMap, Marker } from "mapbox-gl";
 import { cn } from "@/lib/cn";
+import { useTheme } from "@/lib/theme";
 import type { OpenHouseRequest, User } from "@/lib/types";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
@@ -116,7 +117,7 @@ export function FeedMap({
   const total = requests.length;
 
   return createPortal(
-    <div ref={wrapRef} className="fixed inset-0 z-20 overflow-hidden bg-[#eaf1ee] md:left-64">
+    <div ref={wrapRef} className="fixed inset-0 z-20 overflow-hidden bg-[#eaf1ee] dark:bg-[#10242b] md:left-64">
       {TOKEN ? (
         <MapboxCanvas
           requests={requests}
@@ -144,7 +145,7 @@ export function FeedMap({
         <Legend color="#9aa3a0" label="Restricted" />
       </div>
       {!TOKEN && (
-        <p className="pointer-events-none absolute right-3 top-[7.25rem] max-w-[11rem] rounded bg-white/90 px-2 py-1 text-right text-[10px] leading-tight text-muted shadow-sm">
+        <p className="pointer-events-none absolute right-3 top-[7.25rem] max-w-[11rem] rounded bg-surface/90 px-2 py-1 text-right text-[10px] leading-tight text-muted shadow-sm">
           Illustrative map. Set NEXT_PUBLIC_MAPBOX_TOKEN for live Mapbox.
         </p>
       )}
@@ -227,6 +228,7 @@ type CanvasProps = {
 };
 
 function MapboxCanvas({ requests, me, radiusMiles, restrictedReasons, selectedId, onSelect, bottomPad }: CanvasProps & { bottomPad: number }) {
+  const { resolved } = useTheme();
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapboxMap | null>(null);
   const markers = useRef<Map<string, { marker: Marker; el: HTMLElement }>>(new Map());
@@ -246,7 +248,7 @@ function MapboxCanvas({ requests, me, radiusMiles, restrictedReasons, selectedId
       mapboxgl.accessToken = TOKEN!;
       map = new mapboxgl.Map({
         container: ref.current,
-        style: "mapbox://styles/mapbox/light-v11",
+        style: `mapbox://styles/mapbox/${resolved}-v11`,
         center: [me.homeLng, me.homeLat],
         zoom: 10.5,
         attributionControl: true,
@@ -275,7 +277,7 @@ function MapboxCanvas({ requests, me, radiusMiles, restrictedReasons, selectedId
       setReady(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [me.homeLat, me.homeLng]);
+  }, [me.homeLat, me.homeLng, resolved]);
 
   // Radius + fit
   useEffect(() => {
@@ -435,7 +437,7 @@ function SvgCanvas({ requests, me, radiusMiles, restrictedReasons, selectedId, o
 
 function Legend({ color, label }: { color: string; label: string }) {
   return (
-    <span className="flex items-center gap-1 rounded-full bg-white/90 px-2 py-0.5 shadow-sm">
+    <span className="flex items-center gap-1 rounded-full bg-surface/90 px-2 py-0.5 shadow-sm">
       <span className="h-2 w-2 rounded-full" style={{ background: color }} />
       {label}
     </span>

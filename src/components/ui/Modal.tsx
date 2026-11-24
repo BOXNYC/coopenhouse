@@ -35,7 +35,7 @@ export function Modal({ open, onClose, title, description, children, footer, var
   const center = variant === "center";
   return createPortal(
     <div className={cn("fixed inset-0 z-50 flex justify-center", center ? "items-center p-4" : sheet ? "items-end" : "items-end md:items-center md:p-4")}>
-      <div className="absolute inset-0 bg-ink/50 animate-fade-in" onClick={onClose} aria-hidden="true" />
+      <div className="absolute inset-0 bg-black/50 animate-fade-in" onClick={onClose} aria-hidden="true" />
       <div
         role="dialog"
         aria-modal="true"
@@ -55,7 +55,7 @@ export function Modal({ open, onClose, title, description, children, footer, var
             )}
             {description && <p className="mt-0.5 text-sm text-muted">{description}</p>}
           </div>
-          <button type="button" onClick={onClose} aria-label="Close" className="-mr-2 rounded-full p-2 text-muted hover:bg-black/5">
+          <button type="button" onClick={onClose} aria-label="Close" className="-mr-2 rounded-full p-2 text-muted hover:bg-ink/5">
             <XIcon size={18} />
           </button>
         </div>
