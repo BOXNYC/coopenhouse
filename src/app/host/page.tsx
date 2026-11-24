@@ -56,7 +56,7 @@ export default function Page() {
 
 function Feed() {
   const { currentUser: me } = useAuth();
-  const [view, setView] = useState<"feed" | "map" | "schedule">("feed");
+  const [view, setView] = useState<"feed" | "map" | "schedule">("map");
   const [offers, setOffers] = useState<OfferType[]>([]);
   const [sort, setSort] = useState<Sort>("soonest");
   const [range, setRange] = useState<DateRange>("any");
@@ -119,6 +119,14 @@ function Feed() {
                 className="flex h-11 items-center gap-1.5 rounded-full bg-surface px-4 text-sm font-semibold text-ink shadow-pop"
               >
                 <span aria-hidden="true">←</span> List
+              </button>
+              <button
+                type="button"
+                onClick={() => setView("schedule")}
+                aria-label="My schedule"
+                className="order-last grid h-11 w-11 shrink-0 place-items-center rounded-full bg-surface text-ink shadow-pop"
+              >
+                <CalendarIcon size={18} />
               </button>
               <div className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-full bg-surface px-4 shadow-pop">
                 <SearchIcon size={16} />
@@ -185,8 +193,8 @@ function Feed() {
         value={view}
         onChange={setView}
         tabs={[
-          { id: "feed", label: "List", count: feed.data ? feedList.length : undefined },
           { id: "map", label: "Map" },
+          { id: "feed", label: "List", count: feed.data ? feedList.length : undefined },
           { id: "schedule", label: "My schedule", count: schedule.data ? mySchedule.length : undefined },
         ]}
       />
