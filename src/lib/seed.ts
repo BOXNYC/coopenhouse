@@ -16,7 +16,7 @@ import type {
 } from "./types";
 
 export const DEMO_LISTER_ID = "u_lee";
-export const DEMO_HOST_ID = "u_daniel";
+export const DEMO_HOST_ID = "u_kolten";
 
 const HOUR = 3_600_000;
 
@@ -76,8 +76,8 @@ export function seedUsers(): User[] {
       credits: 2,
     }),
     user({
-      id: "u_daniel", name: "Daniel Ortiz", role: "host", initials: "DO", avatarColor: "#c8642b",
-      email: "daniel.ortiz@hillcountry.example", phone: "5125550177",
+      id: "u_kolten", name: "Kolten Yamaguchi", role: "host", initials: "KY", avatarColor: "#c8642b",
+      email: "kolten.yamaguchi@hillcountry.example", phone: "5125550177",
       brokerage: "Hill Country Homes", licenseNumber: "TX-0745219", yearsLicensed: 3,
       badges: { license: true, brokerage: true, id: true }, eoInsured: true,
       homeArea: "South Congress", homeLat: 30.2488, homeLng: -97.7497, radiusMiles: 10,
@@ -275,31 +275,31 @@ export function seedRequests(): OpenHouseRequest[] {
   const r_confirmed = build({
     id: "r_confirmed", listerId: "u_lee", address: "903 Bouldin Ave", neighborhood: "Bouldin Creek", price: 725000,
     beds: 3, baths: 2, sqft: 1710, start: dayAt(1, 13), hours: 3, offer: { type: "referral", percent: 25 }, status: "confirmed", gradient: 1,
-    confirmedHostId: "u_daniel", createdHoursAgo: 52,
+    confirmedHostId: "u_kolten", createdHoursAgo: 52,
     applicants: [
-      ["u_daniel", "Local to the area and available all afternoon.", "confirmed", 40],
+      ["u_kolten", "Local to the area and available all afternoon.", "confirmed", 40],
       ["u_marcus", "Interested if still open.", "backup", 30],
     ],
   });
   r_confirmed.messages = [
-    msg("r_confirmed", "u_lee", "Thanks for taking this one, Daniel. Lockbox code is in the handoff once we're within 48 hours.", 20, 1),
-    msg("r_confirmed", "u_daniel", "Sounds good! I'll arrive 20 minutes early to set up signs.", 19, 2),
+    msg("r_confirmed", "u_lee", "Thanks for taking this one, Kolten. Lockbox code is in the handoff once we're within 48 hours.", 20, 1),
+    msg("r_confirmed", "u_kolten", "Sounds good! I'll arrive 20 minutes early to set up signs.", 19, 2),
   ];
-  r_confirmed.timeline.push({ at: ago(40), label: "Daniel Ortiz applied" }, { at: ago(36), label: "Daniel Ortiz confirmed" });
+  r_confirmed.timeline.push({ at: ago(40), label: "Kolten Yamaguchi applied" }, { at: ago(36), label: "Kolten Yamaguchi confirmed" });
 
   const r_today = build({
     id: "r_today", listerId: "u_lee", address: "5112 Duval St", neighborhood: "Mueller", price: 689000,
     beds: 3, baths: 2.5, sqft: 1860, start: soon, hours: 3, offer: { type: "flat", amount: 125 }, status: "confirmed", gradient: 3,
-    confirmedHostId: "u_daniel", createdHoursAgo: 80, access: "lockbox",
-    applicants: [["u_daniel", "Available, nearby.", "confirmed", 70]],
+    confirmedHostId: "u_kolten", createdHoursAgo: 80, access: "lockbox",
+    applicants: [["u_kolten", "Available, nearby.", "confirmed", 70]],
   });
   r_today.messages = [msg("r_today", "u_lee", "Quick heads up: please keep the back bedroom door closed, cat inside.", 3, 1)];
 
   const r_completed = build({
     id: "r_completed", listerId: "u_lee", address: "3306 Hemlock Ave", neighborhood: "Cherrywood", price: 612000,
     beds: 3, baths: 2, sqft: 1520, start: dayAt(-2, 13), hours: 3, offer: { type: "flat", amount: 100 }, status: "completed", gradient: 4,
-    confirmedHostId: "u_daniel", createdHoursAgo: 150, payment: "unpaid",
-    applicants: [["u_daniel", "Glad to help.", "confirmed", 140]],
+    confirmedHostId: "u_kolten", createdHoursAgo: 150, payment: "unpaid",
+    applicants: [["u_kolten", "Glad to help.", "confirmed", 140]],
   });
   r_completed.ratings.hostToLister = mkRating(5, "Clear instructions and very responsive.", 40);
 
@@ -351,17 +351,17 @@ export function seedRequests(): OpenHouseRequest[] {
     id: "r_dan_applied", listerId: "u_tom", address: "1520 Alta Vista Ave", neighborhood: "Zilker", price: 940000,
     beds: 3, baths: 2, sqft: 1800, start: dayAt(3, 11), hours: 3, offer: { type: "flat", amount: 90 }, status: "applied", gradient: 5, createdHoursAgo: 18,
     applicants: [
-      ["u_daniel", "I live ten minutes away and know Zilker well.", "pending", 5],
+      ["u_kolten", "I live ten minutes away and know Zilker well.", "pending", 5],
       ["u_priya", "Available!", "pending", 2],
     ],
   });
   const r_disputed = build({
     id: "r_disputed", listerId: "u_tom", address: "3815 Speedway", neighborhood: "Hyde Park", price: 575000,
     beds: 2, baths: 1, sqft: 1100, start: dayAt(-8, 13), hours: 3, offer: { type: "flat", amount: 120 }, status: "disputed", gradient: 2,
-    confirmedHostId: "u_daniel", createdHoursAgo: 260, payment: "disputed",
-    applicants: [["u_daniel", "Happy to cover.", "confirmed", 250]],
+    confirmedHostId: "u_kolten", createdHoursAgo: 260, payment: "disputed",
+    applicants: [["u_kolten", "Happy to cover.", "confirmed", 250]],
   });
-  r_disputed.disputes = [{ id: "dp_1", requestId: "r_disputed", openedBy: "u_daniel", reason: "Flat fee was agreed at $120 but nothing has been received after 8 days.", createdAt: ago(48), status: "open" }];
+  r_disputed.disputes = [{ id: "dp_1", requestId: "r_disputed", openedBy: "u_kolten", reason: "Flat fee was agreed at $120 but nothing has been received after 8 days.", createdAt: ago(48), status: "open" }];
   r_disputed.ratings.hostToLister = mkRating(3, "Great listing, but payment is still outstanding.", 60);
 
   return [
@@ -376,12 +376,12 @@ export function seedNotifications(): Notification[] {
   });
   return [
     n("n1", "u_lee", "applicant", "3 applicants on 2210 Rio Grande", "Sofia Lindqvist just applied. Review trust cards and confirm a host.", 3, "r_applied"),
-    n("n2", "u_lee", "reminder", "Open house today", "Daniel Ortiz is confirmed for 5112 Duval St. Check-in opens shortly.", 1, "r_today"),
-    n("n3", "u_lee", "completed", "Daniel submitted the summary", "3306 Hemlock Ave: 14 visitors, 3 leads. Confirm completion and rate Daniel.", 40, "r_completed"),
+    n("n2", "u_lee", "reminder", "Open house today", "Kolten Yamaguchi is confirmed for 5112 Duval St. Check-in opens shortly.", 1, "r_today"),
+    n("n3", "u_lee", "completed", "Kolten submitted the summary", "3306 Hemlock Ave: 14 visitors, 3 leads. Confirm completion and rate Kolten.", 40, "r_completed"),
     n("n4", "u_lee", "reminder", "No applicants yet for 1407 W 38th", "Consider raising the offer or widening the audience.", 5, "r_open", true),
-    n("n5", "u_daniel", "reminder", "Today: 5112 Duval St", "You're confirmed. Review the handoff checklist and check in on arrival.", 1, "r_today"),
-    n("n6", "u_daniel", "confirmed", "You're confirmed for 903 Bouldin Ave", "Lee Wolfowitz confirmed you. Contact details are now visible.", 36, "r_confirmed", true),
-    n("n7", "u_daniel", "urgent", "Urgent: 1109 E 12th St needs a host", "Flat fee $150, tomorrow 11 AM, 3.1 mi away.", 2, "r_feed2"),
-    n("n8", "u_daniel", "payment", "Dispute opened on 3815 Speedway", "A reviewer will look at the signed terms and record.", 48, "r_disputed", true),
+    n("n5", "u_kolten", "reminder", "Today: 5112 Duval St", "You're confirmed. Review the handoff checklist and check in on arrival.", 1, "r_today"),
+    n("n6", "u_kolten", "confirmed", "You're confirmed for 903 Bouldin Ave", "Lee Wolfowitz confirmed you. Contact details are now visible.", 36, "r_confirmed", true),
+    n("n7", "u_kolten", "urgent", "Urgent: 1109 E 12th St needs a host", "Flat fee $150, tomorrow 11 AM, 3.1 mi away.", 2, "r_feed2"),
+    n("n8", "u_kolten", "payment", "Dispute opened on 3815 Speedway", "A reviewer will look at the signed terms and record.", 48, "r_disputed", true),
   ];
 }
