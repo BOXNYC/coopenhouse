@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { AppShell } from "@/components/AppShell";
+import { FeedMap } from "@/components/host/FeedMap";
 import { HostRequestCard } from "@/components/host/HostRequestCard";
 import { Badge } from "@/components/ui/Badge";
 import { Card, SectionTitle } from "@/components/ui/Card";
@@ -55,7 +56,7 @@ export default function Page() {
 
 function Feed() {
   const { currentUser: me } = useAuth();
-  const [view, setView] = useState<"feed" | "schedule">("feed");
+  const [view, setView] = useState<"feed" | "map" | "schedule">("feed");
   const [offers, setOffers] = useState<OfferType[]>([]);
   const [sort, setSort] = useState<Sort>("soonest");
   const [range, setRange] = useState<DateRange>("any");
@@ -119,7 +120,8 @@ function Feed() {
         value={view}
         onChange={setView}
         tabs={[
-          { id: "feed", label: "Nearby", count: feed.data ? feedList.length : undefined },
+          { id: "feed", label: "List", count: feed.data ? feedList.length : undefined },
+          { id: "map", label: "Map" },
           { id: "schedule", label: "My schedule", count: schedule.data ? mySchedule.length : undefined },
         ]}
       />
@@ -231,7 +233,19 @@ function Feed() {
             </div>
           </Card>
 
-          {feed.loading ? (
+          {view === "map" ? (
+            feed.loading ? (
+              <SkeletonCard />
+            ) : (
+              <FeedMap
+                requests={feedList}
+                me={me}
+                radiusMiles={miles}
+                restrictedReasons={new Map(restricted.map((r) => [r.id, reasonFor(r)!]))}
+                listers={userById}
+              />
+            )
+          ) : feed.loading ? (
             <div className="space-y-3" aria-busy="true">
               <SkeletonCard />
               <SkeletonCard />
