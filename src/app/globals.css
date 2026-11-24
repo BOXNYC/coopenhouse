@@ -83,3 +83,7 @@ body {
 }
 
 .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+
+/* Host map mode: the map is full-bleed, so the app header gives way to the floating controls. */
+body.map-mode header.sticky { display: none; }
+body.map-mode .mapboxgl-ctrl-top-right { top: 8.5rem; }

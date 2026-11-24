@@ -101,6 +101,71 @@ function Feed() {
     <HostRequestCard key={r.id} request={r} lister={userById.get(r.listerId)} viewerId={me.id} restrictedReason={reasonFor(r)} />
   );
 
+  if (view === "map") {
+    return (
+      <FeedMap
+        requests={feedList}
+        me={me}
+        radiusMiles={miles}
+        loading={feed.loading}
+        restrictedReasons={new Map(restricted.map((r) => [r.id, reasonFor(r)!]))}
+        renderCard={card}
+        overlay={
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setView("feed")}
+                className="flex h-11 items-center gap-1.5 rounded-full bg-surface px-4 text-sm font-semibold text-ink shadow-pop"
+              >
+                <span aria-hidden="true">←</span> List
+              </button>
+              <div className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-full bg-surface px-4 shadow-pop">
+                <SearchIcon size={16} />
+                <span className="truncate text-sm text-ink-soft">
+                  {miles} mi around {me.homeArea}
+                </span>
+                <input
+                  aria-label="Max distance"
+                  type="range"
+                  min={1}
+                  max={30}
+                  value={miles}
+                  onChange={(e) => setMaxMiles(Number(e.target.value))}
+                  className="ml-auto w-24 shrink-0 accent-brand-700"
+                />
+              </div>
+            </div>
+            <div className="-mx-3 flex gap-2 overflow-x-auto px-3 pb-1" role="group" aria-label="Offer type">
+              {OFFER_TYPES.map((t) => {
+                const on = offers.includes(t);
+                return (
+                  <button
+                    key={t}
+                    type="button"
+                    aria-pressed={on}
+                    onClick={() => toggleOffer(t)}
+                    className={cn(
+                      "shrink-0 rounded-full px-3.5 py-2 text-sm font-medium shadow-card transition",
+                      on ? "bg-brand-700 text-white" : "bg-surface text-ink-soft",
+                    )}
+                  >
+                    {OFFER_META[t].name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        }
+        sections={[
+          { key: "Urgent", title: <SectionTitle>Urgent: needs a host fast</SectionTitle>, items: urgent, className: "rounded-card bg-danger-50 p-2" },
+          { key: "Open requests", title: <SectionTitle>{urgent.length ? "More nearby" : "Open requests"}</SectionTitle>, items: rest },
+          { key: "Restricted", title: <SectionTitle>Restricted for you</SectionTitle>, items: restricted },
+        ]}
+      />
+    );
+  }
+
   return (
     <div className="space-y-4">
       <Card className="flex items-center gap-3" padded>
@@ -233,21 +298,7 @@ function Feed() {
             </div>
           </Card>
 
-          {view === "map" ? (
-            <FeedMap
-              requests={feedList}
-              me={me}
-              radiusMiles={miles}
-              loading={feed.loading}
-              restrictedReasons={new Map(restricted.map((r) => [r.id, reasonFor(r)!]))}
-              renderCard={card}
-              sections={[
-                { key: "Urgent", title: <SectionTitle>Urgent: needs a host fast</SectionTitle>, items: urgent, className: "rounded-card bg-danger-50 p-2" },
-                { key: "Open requests", title: <SectionTitle>{urgent.length ? "More nearby" : "Open requests"}</SectionTitle>, items: rest },
-                { key: "Restricted", title: <SectionTitle>Restricted for you</SectionTitle>, items: restricted },
-              ]}
-            />
-          ) : feed.loading ? (
+          {feed.loading ? (
             <div className="space-y-3" aria-busy="true">
               <SkeletonCard />
               <SkeletonCard />

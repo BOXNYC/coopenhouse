@@ -1,6 +1,7 @@
 "use client";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import type { GeoJSONSource, Map as MapboxMap, Marker } from "mapbox-gl";
 import { cn } from "@/lib/cn";
 import type { OpenHouseRequest, User } from "@/lib/types";
@@ -42,6 +43,7 @@ export function FeedMap({
   sections,
   renderCard,
   loading,
+  overlay,
 }: {
   requests: OpenHouseRequest[];
   me: User;
@@ -50,6 +52,8 @@ export function FeedMap({
   sections: MapSection[];
   renderCard: (r: OpenHouseRequest) => ReactNode;
   loading?: boolean;
+  /** Floating controls rendered over the top of the map. */
+  overlay?: ReactNode;
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(560);
@@ -57,6 +61,11 @@ export function FeedMap({
   const [drag, setDrag] = useState<number | null>(null); // visible px while dragging
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const dragStart = useRef<{ y: number; visible: number } | null>(null);
+
+  useEffect(() => {
+    document.body.classList.add("map-mode");
+    return () => document.body.classList.remove("map-mode");
+  }, []);
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -68,7 +77,7 @@ export function FeedMap({
   }, []);
 
   const snapPx = useMemo(
-    () => ({ peek: PEEK, half: Math.round(height * 0.5), full: height - 12 }),
+    () => ({ peek: PEEK, half: Math.round((height - 64) * 0.5), full: height - 120 }),
     [height],
   );
   const visible = drag ?? snapPx[snap];
@@ -106,11 +115,8 @@ export function FeedMap({
 
   const total = requests.length;
 
-  return (
-    <div
-      ref={wrapRef}
-      className="relative h-[calc(100dvh-15rem)] min-h-[480px] overflow-hidden rounded-card border border-line bg-[#eaf1ee] shadow-card"
-    >
+  return createPortal(
+    <div ref={wrapRef} className="fixed inset-0 z-20 overflow-hidden bg-[#eaf1ee] md:left-64">
       {TOKEN ? (
         <MapboxCanvas
           requests={requests}
@@ -119,7 +125,7 @@ export function FeedMap({
           restrictedReasons={restrictedReasons}
           selectedId={selectedId}
           onSelect={select}
-          bottomPad={PEEK + 24}
+          bottomPad={PEEK + 24 + 64}
         />
       ) : (
         <SvgCanvas
@@ -132,21 +138,23 @@ export function FeedMap({
         />
       )}
 
-      <div className="pointer-events-none absolute left-3 top-3 flex flex-wrap gap-2 text-[11px] font-medium text-ink-soft">
+      <div className="pointer-events-none absolute left-3 top-[7.25rem] z-10 flex flex-wrap gap-2 text-[11px] font-medium text-ink-soft">
         <Legend color="#e8833a" label="Open" />
         <Legend color="#d64545" label="Urgent" />
         <Legend color="#9aa3a0" label="Restricted" />
       </div>
       {!TOKEN && (
-        <p className="pointer-events-none absolute right-3 top-3 max-w-[11rem] rounded bg-white/90 px-2 py-1 text-right text-[10px] leading-tight text-muted shadow-sm">
+        <p className="pointer-events-none absolute right-3 top-[7.25rem] max-w-[11rem] rounded bg-white/90 px-2 py-1 text-right text-[10px] leading-tight text-muted shadow-sm">
           Illustrative map. Set NEXT_PUBLIC_MAPBOX_TOKEN for live Mapbox.
         </p>
       )}
 
+      {overlay && <div className="pointer-events-none absolute inset-x-0 top-0 z-20 p-3"><div className="pointer-events-auto mx-auto max-w-3xl">{overlay}</div></div>}
+
       {/* Floating list sheet */}
       <div
         className={cn(
-          "absolute inset-x-0 bottom-0 flex flex-col rounded-t-[22px] bg-paper shadow-[0_-8px_30px_rgba(10,30,28,0.22)]",
+          "absolute inset-x-0 bottom-16 z-10 mx-auto flex max-w-3xl flex-col rounded-t-[22px] md:bottom-0 bg-paper shadow-[0_-8px_30px_rgba(10,30,28,0.22)]",
           drag === null && "transition-[height] duration-300 ease-out",
         )}
         style={{ height: visible }}
@@ -202,7 +210,8 @@ export function FeedMap({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -280,7 +289,7 @@ function MapboxCanvas({ requests, me, radiusMiles, restrictedReasons, selectedId
         [me.homeLng - dLng, me.homeLat - dLat],
         [me.homeLng + dLng, me.homeLat + dLat],
       ],
-      { padding: { top: 48, left: 32, right: 32, bottom: bottomPad }, duration: 600 },
+      { padding: { top: 150, left: 32, right: 32, bottom: bottomPad }, duration: 600 },
     );
   }, [ready, radiusMiles, me.homeLat, me.homeLng, bottomPad]);
 
