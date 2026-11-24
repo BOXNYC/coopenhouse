@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useId, useState, type ReactNode } from "react";
 import { AppShell } from "@/components/AppShell";
 import { TrustCard } from "@/components/TrustCard";
+import { ListingMap } from "@/components/ListingMap";
 import { RequestPhoto } from "@/components/RequestCard";
 import { directionsUrl, downloadIcs, penaltyFor } from "@/components/host/helpers";
 import { Badge } from "@/components/ui/Badge";
@@ -120,6 +121,7 @@ function Body({ r, me, lister, eligible }: { r: OpenHouseRequest; me: User; list
       {/* Hero */}
       <div className="overflow-hidden rounded-card border border-line bg-surface shadow-card">
         <RequestPhoto request={r} className="h-44 w-full rounded-none" />
+        <ListingMap id={r.id} lat={r.lat} lng={r.lng} precise={fullAddr} className="h-52 border-y border-line" />
         <div className="space-y-2 p-4">
           <div className="flex flex-wrap items-center gap-1.5">
             <StatusPill status={r.status} />

@@ -13,6 +13,7 @@ import { deleteRequest, publishRequest, sendMessage, updateRequest } from "@/lib
 import { useAuth } from "@/lib/auth";
 import { useApplicants, useMutation, useRequest, useUser } from "@/lib/hooks";
 import { hoursUntil } from "@/lib/rules";
+import { ListingMap } from "@/components/ListingMap";
 import { formatCurrency,formatPhone, formatWindow, offerLabel, relativeTime } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type { OpenHouseRequest } from "@/lib/types";
@@ -213,6 +214,8 @@ export default function Page() {
   return shell(
     <div className="mx-auto max-w-4xl space-y-5 pb-6">
       <RequestCard request={r} viewerId={uid} />
+
+      <ListingMap id={r.id} lat={r.lat} lng={r.lng} precise className="h-52 rounded-card border border-line shadow-card" />
 
       {!cancelledish && r.status !== "draft" && <Stepper steps={LIFECYCLE_STEPS} current={lifecycleIndex(r.status)} className="px-1" />}
 
