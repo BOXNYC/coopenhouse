@@ -336,7 +336,12 @@ function MapboxCanvas({ requests, me, radiusMiles, restrictedReasons, selectedId
     if (r && mapRef.current) mapRef.current.easeTo({ center: [r.lng, r.lat], duration: 400, padding: { bottom: bottomPad } });
   }, [selectedId, requests, bottomPad]);
 
-  return <div ref={ref} className="absolute inset-0" aria-label="Map of nearby open houses" />;
+  // mapbox-gl.css forces `position: relative` on the map element, so size it via a wrapper.
+  return (
+    <div className="absolute inset-0">
+      <div ref={ref} className="h-full w-full" aria-label="Map of nearby open houses" />
+    </div>
+  );
 }
 
 /* ----------------------------- SVG fallback ----------------------------- */

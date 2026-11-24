@@ -123,9 +123,16 @@ export function useAuth(): AuthValue {
   return ctx;
 }
 
+const noopSubscribe = () => () => {};
+/** False on the server and while this component hydrates, even if the provider above already has; true afterwards. */
+function useHydrated(): boolean {
+  return useSyncExternalStore(noopSubscribe, () => true, () => false);
+}
+
 /** Redirects to /login (with ?next=) when signed out. Renders nothing until auth is known. */
 export function RequireAuth({ children, fallback = null }: { children: ReactNode; fallback?: ReactNode }) {
-  const { ready, currentUser } = useAuth();
+  const { ready: authReady, currentUser } = useAuth();
+  const ready = useHydrated() && authReady;
   const router = useRouter();
   const pathname = usePathname();
   useEffect(() => {
@@ -137,7 +144,8 @@ export function RequireAuth({ children, fallback = null }: { children: ReactNode
 
 /** Requires auth AND the given active role; otherwise sends the user to their own home. */
 export function RequireRole({ role, children, fallback = null }: { role: ActiveRole; children: ReactNode; fallback?: ReactNode }) {
-  const { ready, currentUser, role: active } = useAuth();
+  const { ready: authReady, currentUser, role: active } = useAuth();
+  const ready = useHydrated() && authReady;
   const router = useRouter();
   const pathname = usePathname();
   useEffect(() => {
