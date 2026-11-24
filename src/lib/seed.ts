@@ -15,7 +15,7 @@ import type {
   User,
 } from "./types";
 
-export const DEMO_LISTER_ID = "u_maya";
+export const DEMO_LISTER_ID = "u_lee";
 export const DEMO_HOST_ID = "u_daniel";
 
 const HOUR = 3_600_000;
@@ -65,7 +65,7 @@ function user(p: Partial<User> & Pick<User, "id" | "name" | "role" | "initials" 
 export function seedUsers(): User[] {
   return [
     user({
-      id: "u_maya", name: "Lee Wolfowitz", role: "lister", initials: "LW", avatarColor: "#0f5565",
+      id: "u_lee", name: "Lee Wolfowitz", role: "lister", initials: "LW", avatarColor: "#0f5565",
       email: "lee.wolfowitz@lonestarrealty.example", phone: "5125550142",
       brokerage: "Lonestar Realty Group", licenseNumber: "TX-0612384", yearsLicensed: 9,
       badges: { license: true, brokerage: true, id: true }, eoInsured: true,
@@ -85,10 +85,10 @@ export function seedUsers(): User[] {
       stats: { covered: 14, completionRate: 96, noShows: 0, rating: 4.8, ratingCount: 11 },
       reviews: [
         review("rv_d1", "u_tom", "Tom Nguyen", 5, "Showed up early, great energy, sent a detailed summary.", 20),
-        review("rv_d2", "u_maya", "Lee Wolfowitz", 5, "Left the house spotless. Would hire again.", 10),
+        review("rv_d2", "u_lee", "Lee Wolfowitz", 5, "Left the house spotless. Would hire again.", 10),
         review("rv_d3", "u_priya", "Priya Raman", 4, "Professional and friendly with visitors.", 45),
       ],
-      workedWithListerIds: ["u_tom", "u_maya"],
+      workedWithListerIds: ["u_tom", "u_lee"],
       credits: 1,
       availability: { days: [0, 6], startHour: 10, endHour: 17, minOffer: "any", alertsEnabled: true },
     }),
@@ -100,10 +100,10 @@ export function seedUsers(): User[] {
       bio: "Top producer who covers open houses for teammates and friends.",
       stats: { covered: 41, completionRate: 100, noShows: 0, rating: 4.9, ratingCount: 28 },
       reviews: [
-        review("rv_p1", "u_maya", "Lee Wolfowitz", 5, "Priya is the gold standard. Zero worries.", 30),
+        review("rv_p1", "u_lee", "Lee Wolfowitz", 5, "Priya is the gold standard. Zero worries.", 30),
         review("rv_p2", "u_tom", "Tom Nguyen", 5, "Brought two serious buyers to my listing.", 60),
       ],
-      workedWithListerIds: ["u_maya", "u_tom"],
+      workedWithListerIds: ["u_lee", "u_tom"],
     }),
     user({
       id: "u_marcus", name: "Marcus Bell", role: "host", initials: "MB", avatarColor: "#2f6fb0",
@@ -208,7 +208,7 @@ function build(s: ReqSpec): OpenHouseRequest {
       talkingPoints: "Fully renovated kitchen (2023), new HVAC, walkable to parks and coffee. Seller is motivated but flexible on close date.",
       sensitivities: "Seller is going through a relocation. Do not speculate on reasons for selling or on pricing flexibility.",
       doNotDiscuss: ["Seller's relocation reason", "Offer history", "Price flexibility"],
-      emergencyContact: { name: s.listerId === "u_maya" ? "Lee Wolfowitz" : "Tom Nguyen", phone: s.listerId === "u_maya" ? "5125550142" : "5125550163" },
+      emergencyContact: { name: s.listerId === "u_lee" ? "Lee Wolfowitz" : "Tom Nguyen", phone: s.listerId === "u_lee" ? "5125550142" : "5125550163" },
     },
     audience: s.audience ?? { mode: "verified", widenAfterHours: 24, requireBadges: ["license"] },
     instantAccept: !!s.instantAccept,
@@ -259,11 +259,11 @@ export function seedRequests(): OpenHouseRequest[] {
   const soon = new Date(Math.ceil((now + 3 * HOUR) / HOUR) * HOUR); // top of the hour, ~3-4h away
 
   const r_open = build({
-    id: "r_open", listerId: "u_maya", address: "1407 W 38th St", neighborhood: "Tarrytown", price: 865000,
+    id: "r_open", listerId: "u_lee", address: "1407 W 38th St", neighborhood: "Tarrytown", price: 865000,
     beds: 3, baths: 2, sqft: 1980, start: dayAt(3, 13), hours: 3, offer: { type: "lead" }, status: "open", gradient: 0, createdHoursAgo: 6,
   });
   const r_applied = build({
-    id: "r_applied", listerId: "u_maya", address: "2210 Rio Grande St, Unit 4B", neighborhood: "Hyde Park", price: 549000,
+    id: "r_applied", listerId: "u_lee", address: "2210 Rio Grande St, Unit 4B", neighborhood: "Hyde Park", price: 549000,
     beds: 2, baths: 2, sqft: 1240, start: dayAt(2, 14), hours: 3, offer: { type: "flat", amount: 100 }, status: "applied", gradient: 2, access: "meet",
     audience: { mode: "verified", widenAfterHours: 24, requireBadges: ["license"] }, createdHoursAgo: 20,
     applicants: [
@@ -273,7 +273,7 @@ export function seedRequests(): OpenHouseRequest[] {
     ],
   });
   const r_confirmed = build({
-    id: "r_confirmed", listerId: "u_maya", address: "903 Bouldin Ave", neighborhood: "Bouldin Creek", price: 725000,
+    id: "r_confirmed", listerId: "u_lee", address: "903 Bouldin Ave", neighborhood: "Bouldin Creek", price: 725000,
     beds: 3, baths: 2, sqft: 1710, start: dayAt(1, 13), hours: 3, offer: { type: "referral", percent: 25 }, status: "confirmed", gradient: 1,
     confirmedHostId: "u_daniel", createdHoursAgo: 52,
     applicants: [
@@ -282,21 +282,21 @@ export function seedRequests(): OpenHouseRequest[] {
     ],
   });
   r_confirmed.messages = [
-    msg("r_confirmed", "u_maya", "Thanks for taking this one, Daniel. Lockbox code is in the handoff once we're within 48 hours.", 20, 1),
+    msg("r_confirmed", "u_lee", "Thanks for taking this one, Daniel. Lockbox code is in the handoff once we're within 48 hours.", 20, 1),
     msg("r_confirmed", "u_daniel", "Sounds good! I'll arrive 20 minutes early to set up signs.", 19, 2),
   ];
   r_confirmed.timeline.push({ at: ago(40), label: "Daniel Ortiz applied" }, { at: ago(36), label: "Daniel Ortiz confirmed" });
 
   const r_today = build({
-    id: "r_today", listerId: "u_maya", address: "5112 Duval St", neighborhood: "Mueller", price: 689000,
+    id: "r_today", listerId: "u_lee", address: "5112 Duval St", neighborhood: "Mueller", price: 689000,
     beds: 3, baths: 2.5, sqft: 1860, start: soon, hours: 3, offer: { type: "flat", amount: 125 }, status: "confirmed", gradient: 3,
     confirmedHostId: "u_daniel", createdHoursAgo: 80, access: "lockbox",
     applicants: [["u_daniel", "Available, nearby.", "confirmed", 70]],
   });
-  r_today.messages = [msg("r_today", "u_maya", "Quick heads up: please keep the back bedroom door closed, cat inside.", 3, 1)];
+  r_today.messages = [msg("r_today", "u_lee", "Quick heads up: please keep the back bedroom door closed, cat inside.", 3, 1)];
 
   const r_completed = build({
-    id: "r_completed", listerId: "u_maya", address: "3306 Hemlock Ave", neighborhood: "Cherrywood", price: 612000,
+    id: "r_completed", listerId: "u_lee", address: "3306 Hemlock Ave", neighborhood: "Cherrywood", price: 612000,
     beds: 3, baths: 2, sqft: 1520, start: dayAt(-2, 13), hours: 3, offer: { type: "flat", amount: 100 }, status: "completed", gradient: 4,
     confirmedHostId: "u_daniel", createdHoursAgo: 150, payment: "unpaid",
     applicants: [["u_daniel", "Glad to help.", "confirmed", 140]],
@@ -304,7 +304,7 @@ export function seedRequests(): OpenHouseRequest[] {
   r_completed.ratings.hostToLister = mkRating(5, "Clear instructions and very responsive.", 40);
 
   const r_settled = build({
-    id: "r_settled", listerId: "u_maya", address: "1818 Newning Ave", neighborhood: "South Congress", price: 799000,
+    id: "r_settled", listerId: "u_lee", address: "1818 Newning Ave", neighborhood: "South Congress", price: 799000,
     beds: 4, baths: 3, sqft: 2240, start: dayAt(-10, 12), hours: 3, offer: { type: "lead" }, status: "settled", gradient: 5,
     confirmedHostId: "u_priya", createdHoursAgo: 300, payment: "n/a",
     applicants: [["u_priya", "Count me in.", "confirmed", 290]],
@@ -313,7 +313,7 @@ export function seedRequests(): OpenHouseRequest[] {
   r_settled.ratings.hostToLister = mkRating(5, "Easy handoff, easy day.", 218);
 
   const r_cancelled = build({
-    id: "r_cancelled", listerId: "u_maya", address: "78 Rainey St, Unit 12", neighborhood: "East Austin", price: 455000,
+    id: "r_cancelled", listerId: "u_lee", address: "78 Rainey St, Unit 12", neighborhood: "East Austin", price: 455000,
     beds: 1, baths: 1, sqft: 840, start: dayAt(-5, 14), hours: 2, offer: { type: "credit", credits: 1 }, status: "cancelled-host", gradient: 2,
     createdHoursAgo: 200,
     applicants: [["u_marcus", "I can do it.", "withdrawn", 190]],
@@ -322,7 +322,7 @@ export function seedRequests(): OpenHouseRequest[] {
   r_cancelled.timeline.push({ at: ago(130), label: "Marcus Bell cancelled (late)" });
 
   const r_expired = build({
-    id: "r_expired", listerId: "u_maya", address: "4520 Bull Creek Rd", neighborhood: "Allandale", price: 935000,
+    id: "r_expired", listerId: "u_lee", address: "4520 Bull Creek Rd", neighborhood: "Allandale", price: 935000,
     beds: 4, baths: 3, sqft: 2700, start: dayAt(-6, 13), hours: 3, offer: { type: "lead" }, status: "expired", gradient: 3, createdHoursAgo: 220,
   });
   r_expired.timeline.push({ at: ago(144), label: "Expired with no taker" });
@@ -375,10 +375,10 @@ export function seedNotifications(): Notification[] {
     id, userId, type, title, body, requestId, createdAt: ago(hoursAgo), read,
   });
   return [
-    n("n1", "u_maya", "applicant", "3 applicants on 2210 Rio Grande", "Sofia Lindqvist just applied. Review trust cards and confirm a host.", 3, "r_applied"),
-    n("n2", "u_maya", "reminder", "Open house today", "Daniel Ortiz is confirmed for 5112 Duval St. Check-in opens shortly.", 1, "r_today"),
-    n("n3", "u_maya", "completed", "Daniel submitted the summary", "3306 Hemlock Ave: 14 visitors, 3 leads. Confirm completion and rate Daniel.", 40, "r_completed"),
-    n("n4", "u_maya", "reminder", "No applicants yet for 1407 W 38th", "Consider raising the offer or widening the audience.", 5, "r_open", true),
+    n("n1", "u_lee", "applicant", "3 applicants on 2210 Rio Grande", "Sofia Lindqvist just applied. Review trust cards and confirm a host.", 3, "r_applied"),
+    n("n2", "u_lee", "reminder", "Open house today", "Daniel Ortiz is confirmed for 5112 Duval St. Check-in opens shortly.", 1, "r_today"),
+    n("n3", "u_lee", "completed", "Daniel submitted the summary", "3306 Hemlock Ave: 14 visitors, 3 leads. Confirm completion and rate Daniel.", 40, "r_completed"),
+    n("n4", "u_lee", "reminder", "No applicants yet for 1407 W 38th", "Consider raising the offer or widening the audience.", 5, "r_open", true),
     n("n5", "u_daniel", "reminder", "Today: 5112 Duval St", "You're confirmed. Review the handoff checklist and check in on arrival.", 1, "r_today"),
     n("n6", "u_daniel", "confirmed", "You're confirmed for 903 Bouldin Ave", "Lee Wolfowitz confirmed you. Contact details are now visible.", 36, "r_confirmed", true),
     n("n7", "u_daniel", "urgent", "Urgent: 1109 E 12th St needs a host", "Flat fee $150, tomorrow 11 AM, 3.1 mi away.", 2, "r_feed2"),
