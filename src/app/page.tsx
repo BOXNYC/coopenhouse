@@ -66,7 +66,7 @@ export default function Landing() {
         </div>
         <div className="mt-10 rounded-card bg-brand-800 p-6 text-white md:p-8">
           <h2 className="text-xl font-semibold">See both sides in a minute</h2>
-          <p className="mt-1 text-brand-100">Sign in as a Lister or a Host with seeded demo data. No account needed.</p>
+          <p className="mt-1 text-brand-100">Sign in as a Lister or a Host to explore. No account needed.</p>
           <Button href="/login" variant="accent" className="mt-4">Pick a demo login</Button>
         </div>
       </section>

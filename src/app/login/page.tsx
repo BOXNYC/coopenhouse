@@ -32,7 +32,7 @@ export default function LoginPage() {
     <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-5 py-8">
       <Logo />
       <h1 className="mt-8 text-3xl font-semibold tracking-tight text-ink">Welcome to the demo</h1>
-      <p className="mt-2 text-ink-soft">Choose a seeded login. Everything is in-memory, so feel free to click around.</p>
+      <p className="mt-2 text-ink-soft">Choose a login to explore. Feel free to click around.</p>
 
       {ready && currentUser && role && (
         <button onClick={() => router.push(homeFor(role))} className="mt-4 rounded-xl bg-brand-50 px-4 py-3 text-left text-sm text-brand-800">
