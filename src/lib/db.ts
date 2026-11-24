@@ -8,15 +8,22 @@ export interface DB {
   requests: OpenHouseRequest[];
   notifications: Notification[];
   version: number;
+  /** Fingerprint of the seeded users, so a changed seed replaces a stale store after hot reload. */
+  seedSig: string;
   listeners: Set<() => void>;
 }
 
 const KEY = "__coopenhouse_db__";
 type G = typeof globalThis & { [KEY]?: DB };
 
+const sigOf = (users: User[]) => users.map((u) => `${u.id}:${u.name}:${u.initials}`).join("|");
+
+const SEED_SIG = sigOf(seedUsers());
+
 function create(): DB {
   return {
     users: seedUsers(),
+    seedSig: SEED_SIG,
     requests: seedRequests(),
     notifications: seedNotifications(),
     version: 0,
@@ -26,8 +33,9 @@ function create(): DB {
 
 export function getDB(): DB {
   const g = globalThis as G;
-  if (!g[KEY]) g[KEY] = create();
-  return g[KEY];
+  const cur = g[KEY];
+  if (!cur || cur.seedSig !== SEED_SIG) g[KEY] = { ...create(), listeners: cur?.listeners ?? new Set() };
+  return g[KEY]!;
 }
 
 /** Reset to freshly seeded data (handy for demos). */
