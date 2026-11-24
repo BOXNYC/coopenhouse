@@ -1,7 +1,7 @@
 "use client";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef } from "react";
-import type { GeoJSONSource, Map as MapboxMap } from "mapbox-gl";
+import type { Map as MapboxMap } from "mapbox-gl";
 import { cn } from "@/lib/cn";
 import { LockIcon } from "@/components/ui/icons";
 
