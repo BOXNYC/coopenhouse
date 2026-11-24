@@ -1,7 +1,8 @@
 "use client";
 import { Avatar, Card, ClockIcon, MapPinIcon, StatusPill } from "@/components/ui";
 import { formatDuration, formatWindow, offerLabel } from "@/lib/format";
-import { displayAddress } from "@/lib/rules";
+import { ListingMap } from "@/components/ListingMap";
+import { canViewFullAddress, displayAddress } from "@/lib/rules";
 import { formatCountdown } from "./clock";
 import type { EventCtx } from "./shared";
 
@@ -18,7 +19,7 @@ export function EventHero({ ctx }: { ctx: EventCtx }) {
   }
   return (
     <Card padded={false} className="overflow-hidden">
-      <div className="h-24 w-full" style={{ background: req.photo.url ? `url(${req.photo.url}) center/cover` : req.photo.gradient }} aria-hidden="true" />
+      <ListingMap id={req.id} lat={req.lat} lng={req.lng} precise={canViewFullAddress(req, me.id)} className="h-48 w-full" />
       <div className="space-y-3 p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
