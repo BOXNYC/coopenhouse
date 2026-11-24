@@ -6,7 +6,7 @@ export function Logo({ className, light }: { className?: string; light?: boolean
       <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M4 11l8-7 8 7" />
         <path d="M6 10v10h12V10" />
-        <path d="M10 20v-5h4v5" />
+        <path d="M10 20v-5h4v5" className="stroke-accent-500" />
       </svg>
       <span className="text-[17px]">CoOpenHouse</span>
     </span>
