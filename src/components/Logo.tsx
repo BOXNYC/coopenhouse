@@ -8,7 +8,9 @@ export function Logo({ className, light }: { className?: string; light?: boolean
         <path d="M6 10v10h12V10" />
         <path d="M10 20v-5h4v5" className="stroke-accent-500" />
       </svg>
-      <span className="text-[17px]">CoOpenHouse</span>
+      <span className="text-[17px]">
+        <span className="text-accent-500">Co</span>OpenHouse
+      </span>
     </span>
   );
 }
