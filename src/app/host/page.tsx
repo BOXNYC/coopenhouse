@@ -234,17 +234,19 @@ function Feed() {
           </Card>
 
           {view === "map" ? (
-            feed.loading ? (
-              <SkeletonCard />
-            ) : (
-              <FeedMap
-                requests={feedList}
-                me={me}
-                radiusMiles={miles}
-                restrictedReasons={new Map(restricted.map((r) => [r.id, reasonFor(r)!]))}
-                listers={userById}
-              />
-            )
+            <FeedMap
+              requests={feedList}
+              me={me}
+              radiusMiles={miles}
+              loading={feed.loading}
+              restrictedReasons={new Map(restricted.map((r) => [r.id, reasonFor(r)!]))}
+              renderCard={card}
+              sections={[
+                { key: "Urgent", title: <SectionTitle>Urgent: needs a host fast</SectionTitle>, items: urgent, className: "rounded-card bg-danger-50 p-2" },
+                { key: "Open requests", title: <SectionTitle>{urgent.length ? "More nearby" : "Open requests"}</SectionTitle>, items: rest },
+                { key: "Restricted", title: <SectionTitle>Restricted for you</SectionTitle>, items: restricted },
+              ]}
+            />
           ) : feed.loading ? (
             <div className="space-y-3" aria-busy="true">
               <SkeletonCard />

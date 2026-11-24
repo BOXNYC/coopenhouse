@@ -49,3 +49,13 @@ src/
 ```
 
 Screens wrap themselves in `<AppShell role="lister" | "host">`, fetch with the hooks, and write with `useMutation(api.fn)`. Mutations notify the store, so every mounted hook refetches silently.
+
+## Map view (Host feed)
+
+The Host feed's **Map** tab uses Mapbox GL with the request list floating on top as a draggable bottom sheet. Add a public token to `.env.local`:
+
+```
+NEXT_PUBLIC_MAPBOX_TOKEN=pk.your_token_here
+```
+
+Without a token it falls back to an illustrative SVG map.
