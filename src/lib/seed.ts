@@ -65,8 +65,8 @@ function user(p: Partial<User> & Pick<User, "id" | "name" | "role" | "initials" 
 export function seedUsers(): User[] {
   return [
     user({
-      id: "u_maya", name: "Maya Chen", role: "lister", initials: "MC", avatarColor: "#0f5565",
-      email: "maya.chen@lonestarrealty.example", phone: "5125550142",
+      id: "u_maya", name: "Lee Wolfowitz", role: "lister", initials: "LW", avatarColor: "#0f5565",
+      email: "lee.wolfowitz@lonestarrealty.example", phone: "5125550142",
       brokerage: "Lonestar Realty Group", licenseNumber: "TX-0612384", yearsLicensed: 9,
       badges: { license: true, brokerage: true, id: true }, eoInsured: true,
       homeArea: "Zilker", homeLat: 30.2669, homeLng: -97.7729, radiusMiles: 12,
@@ -85,7 +85,7 @@ export function seedUsers(): User[] {
       stats: { covered: 14, completionRate: 96, noShows: 0, rating: 4.8, ratingCount: 11 },
       reviews: [
         review("rv_d1", "u_tom", "Tom Nguyen", 5, "Showed up early, great energy, sent a detailed summary.", 20),
-        review("rv_d2", "u_maya", "Maya Chen", 5, "Left the house spotless. Would hire again.", 10),
+        review("rv_d2", "u_maya", "Lee Wolfowitz", 5, "Left the house spotless. Would hire again.", 10),
         review("rv_d3", "u_priya", "Priya Raman", 4, "Professional and friendly with visitors.", 45),
       ],
       workedWithListerIds: ["u_tom", "u_maya"],
@@ -100,7 +100,7 @@ export function seedUsers(): User[] {
       bio: "Top producer who covers open houses for teammates and friends.",
       stats: { covered: 41, completionRate: 100, noShows: 0, rating: 4.9, ratingCount: 28 },
       reviews: [
-        review("rv_p1", "u_maya", "Maya Chen", 5, "Priya is the gold standard. Zero worries.", 30),
+        review("rv_p1", "u_maya", "Lee Wolfowitz", 5, "Priya is the gold standard. Zero worries.", 30),
         review("rv_p2", "u_tom", "Tom Nguyen", 5, "Brought two serious buyers to my listing.", 60),
       ],
       workedWithListerIds: ["u_maya", "u_tom"],
@@ -208,7 +208,7 @@ function build(s: ReqSpec): OpenHouseRequest {
       talkingPoints: "Fully renovated kitchen (2023), new HVAC, walkable to parks and coffee. Seller is motivated but flexible on close date.",
       sensitivities: "Seller is going through a relocation. Do not speculate on reasons for selling or on pricing flexibility.",
       doNotDiscuss: ["Seller's relocation reason", "Offer history", "Price flexibility"],
-      emergencyContact: { name: s.listerId === "u_maya" ? "Maya Chen" : "Tom Nguyen", phone: s.listerId === "u_maya" ? "5125550142" : "5125550163" },
+      emergencyContact: { name: s.listerId === "u_maya" ? "Lee Wolfowitz" : "Tom Nguyen", phone: s.listerId === "u_maya" ? "5125550142" : "5125550163" },
     },
     audience: s.audience ?? { mode: "verified", widenAfterHours: 24, requireBadges: ["license"] },
     instantAccept: !!s.instantAccept,
@@ -380,7 +380,7 @@ export function seedNotifications(): Notification[] {
     n("n3", "u_maya", "completed", "Daniel submitted the summary", "3306 Hemlock Ave: 14 visitors, 3 leads. Confirm completion and rate Daniel.", 40, "r_completed"),
     n("n4", "u_maya", "reminder", "No applicants yet for 1407 W 38th", "Consider raising the offer or widening the audience.", 5, "r_open", true),
     n("n5", "u_daniel", "reminder", "Today: 5112 Duval St", "You're confirmed. Review the handoff checklist and check in on arrival.", 1, "r_today"),
-    n("n6", "u_daniel", "confirmed", "You're confirmed for 903 Bouldin Ave", "Maya Chen confirmed you. Contact details are now visible.", 36, "r_confirmed", true),
+    n("n6", "u_daniel", "confirmed", "You're confirmed for 903 Bouldin Ave", "Lee Wolfowitz confirmed you. Contact details are now visible.", 36, "r_confirmed", true),
     n("n7", "u_daniel", "urgent", "Urgent: 1109 E 12th St needs a host", "Flat fee $150, tomorrow 11 AM, 3.1 mi away.", 2, "r_feed2"),
     n("n8", "u_daniel", "payment", "Dispute opened on 3815 Speedway", "A reviewer will look at the signed terms and record.", 48, "r_disputed", true),
   ];

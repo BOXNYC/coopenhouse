@@ -20,7 +20,7 @@ Pick one on `/login`:
 
 | User | Id | Role |
 |---|---|---|
-| Maya Chen | `u_maya` | Lister |
+| Lee Wolfowitz | `u_maya` | Lister |
 | Daniel Ortiz | `u_daniel` | Host |
 
 Other seeded agents appear as applicants: Priya Raman (`u_priya`, top-rated), Marcus Bell (`u_marcus`, newer, one no-show), Sofia Lindqvist (`u_sofia`, brand new and unverified) and Tom Nguyen (`u_tom`, another Lister). Use "Switch to Host/Lister demo" in the profile menu to flip sides quickly.
