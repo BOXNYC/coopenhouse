@@ -66,7 +66,7 @@ export function makeUser(p: Partial<User> & Pick<User, "id" | "name" | "defaultM
 export function seedUsers(): User[] {
   return [
     makeUser({
-      id: "u_lee", name: "Lee Wolfowitz", defaultMode: "lister", initials: "LW", avatarColor: "#0f5565",
+      id: "u_lee", name: "Lee W.", defaultMode: "lister", initials: "LW", avatarColor: "#0f5565",
       email: "lee.wolfowitz@lonestarrealty.example", phone: "5125550142",
       brokerage: "Lonestar Realty Group", licenseNumber: "TX-0612384", yearsLicensed: 9,
       badges: { license: true, brokerage: true, id: true }, eoInsured: true,
@@ -90,7 +90,7 @@ export function seedUsers(): User[] {
       stats: { covered: 14, completionRate: 96, noShows: 0, rating: 4.8, ratingCount: 11 },
       reviews: [
         review("rv_d1", "u_tom", "Tom Nguyen", 5, "Showed up early, great energy, sent a detailed summary.", 20),
-        review("rv_d2", "u_lee", "Lee Wolfowitz", 5, "Left the house spotless. Would hire again.", 10),
+        review("rv_d2", "u_lee", "Lee W.", 5, "Left the house spotless. Would hire again.", 10),
         review("rv_d3", "u_priya", "Priya Raman", 4, "Professional and friendly with visitors.", 45),
       ],
       workedWithListerIds: ["u_tom", "u_lee"],
@@ -107,7 +107,7 @@ export function seedUsers(): User[] {
       bio: "Top producer who covers open houses for teammates and friends.",
       stats: { covered: 41, completionRate: 100, noShows: 0, rating: 4.9, ratingCount: 28 },
       reviews: [
-        review("rv_p1", "u_lee", "Lee Wolfowitz", 5, "Priya is the gold standard. Zero worries.", 30),
+        review("rv_p1", "u_lee", "Lee W.", 5, "Priya is the gold standard. Zero worries.", 30),
         review("rv_p2", "u_tom", "Tom Nguyen", 5, "Brought two serious buyers to my listing.", 60),
       ],
       workedWithListerIds: ["u_lee", "u_tom"],
@@ -216,7 +216,7 @@ interface ReqSpec {
 }
 
 const EMERGENCY: Record<string, { name: string; phone: string }> = {
-  u_lee: { name: "Lee Wolfowitz", phone: "5125550142" },
+  u_lee: { name: "Lee W.", phone: "5125550142" },
   u_tom: { name: "Tom Nguyen", phone: "5125550163" },
   u_priya: { name: "Priya Raman", phone: "5125550188" },
   u_dana: { name: "Dana Okafor", phone: "2125550118" },
@@ -518,12 +518,12 @@ export function seedNotifications(): Notification[] {
     n("n3", "u_lee", "completed", "Kolten submitted the summary", "3306 Hemlock Ave: 14 visitors, 3 leads. Confirm completion and rate Kolten.", 40, "r_completed"),
     n("n4", "u_lee", "reminder", "No applicants yet for 1407 W 38th", "Consider raising the offer or widening the audience.", 5, "r_open", true),
     n("n5", "u_kolten", "reminder", "Today: 5112 Duval St", "You're confirmed. Review the handoff checklist and check in on arrival.", 1, "r_today"),
-    n("n6", "u_kolten", "confirmed", "You're confirmed for 903 Bouldin Ave", "Lee Wolfowitz confirmed you. Contact details are now visible.", 36, "r_confirmed", true),
+    n("n6", "u_kolten", "confirmed", "You're confirmed for 903 Bouldin Ave", "Lee W. confirmed you. Contact details are now visible.", 36, "r_confirmed", true),
     n("n7", "u_kolten", "urgent", "Urgent: 1109 E 12th St needs a host", "Flat fee $150, tomorrow 11 AM, 3.1 mi away.", 2, "r_feed2"),
     n("n8", "u_kolten", "payment", "Dispute opened on 3815 Speedway", "A reviewer will look at the signed terms and record.", 48, "r_disputed", true),
     n("n9", "u_lee", "applicant", "3 applicants on 88 Greenwich St", "Jules Moreau just applied. Review trust cards and confirm a host.", 3, "r_ny_applied", false, "nyc"),
     n("n10", "u_lee", "reminder", "Open house tomorrow", "Kolten Yamaguchi is confirmed for 17 Henry St. Handoff details unlock soon.", 2, "r_ny_confirmed", false, "nyc"),
-    n("n11", "u_kolten", "confirmed", "You're confirmed for 17 Henry St", "Lee Wolfowitz confirmed you. Contact details are now visible.", 38, "r_ny_confirmed", true, "nyc"),
+    n("n11", "u_kolten", "confirmed", "You're confirmed for 17 Henry St", "Lee W. confirmed you. Contact details are now visible.", 38, "r_ny_confirmed", true, "nyc"),
     n("n12", "u_kolten", "urgent", "Urgent: Williamsburg needs a host", "Flat fee $175, tomorrow 11 AM, nearby.", 2, "r_ny_feed2", false, "nyc"),
   ];
 }
