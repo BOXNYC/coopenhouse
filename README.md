@@ -21,7 +21,7 @@ Pick one on `/login`:
 | User | Id | Role |
 |---|---|---|
 | Lee W. | `u_lee` | Lister |
-| Kolten Yamaguchi | `u_kolten` | Host |
+| Kolten Y. | `u_kolten` | Host |
 
 Other seeded agents appear as applicants: Priya Raman (`u_priya`, top-rated), Marcus Bell (`u_marcus`, newer, one no-show), Sofia Lindqvist (`u_sofia`, brand new and unverified) and Tom Nguyen (`u_tom`, another Lister). Use "Switch to Host/Lister demo" in the profile menu to flip sides quickly.
 

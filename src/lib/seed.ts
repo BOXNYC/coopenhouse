@@ -79,7 +79,7 @@ export function seedUsers(): User[] {
       credits: 2,
     }),
     makeUser({
-      id: "u_kolten", name: "Kolten Yamaguchi", defaultMode: "host", initials: "KY", avatarColor: "#c8642b",
+      id: "u_kolten", name: "Kolten Y.", defaultMode: "host", initials: "KY", avatarColor: "#c8642b",
       email: "kolten.yamaguchi@hillcountry.example", phone: "5125550177",
       brokerage: "Hill Country Homes", licenseNumber: "TX-0745219", yearsLicensed: 3,
       badges: { license: true, brokerage: true, id: true }, eoInsured: true,
@@ -344,7 +344,7 @@ export function seedRequests(): OpenHouseRequest[] {
     msg("r_confirmed", "u_lee", "Thanks for taking this one, Kolten. Lockbox code is in the handoff once we're within 48 hours.", 20, 1),
     msg("r_confirmed", "u_kolten", "Sounds good! I'll arrive 20 minutes early to set up signs.", 19, 2),
   ];
-  r_confirmed.timeline.push({ at: ago(40), label: "Kolten Yamaguchi applied" }, { at: ago(36), label: "Kolten Yamaguchi confirmed" });
+  r_confirmed.timeline.push({ at: ago(40), label: "Kolten Y. applied" }, { at: ago(36), label: "Kolten Y. confirmed" });
 
   const r_today = build({
     id: "r_today", listerId: "u_lee", address: "5112 Duval St", neighborhood: "Mueller", price: 689000,
@@ -452,7 +452,7 @@ export function seedRequests(): OpenHouseRequest[] {
     msg("r_ny_confirmed", "u_lee", "Thanks Kolten. The doorman will have your name; sign-in sheet is on the console table.", 18, 1),
     msg("r_ny_confirmed", "u_kolten", "Perfect, I'll be there 20 minutes early.", 17, 2),
   ];
-  ny_confirmed.timeline.push({ at: ago(42), label: "Kolten Yamaguchi applied" }, { at: ago(38), label: "Kolten Yamaguchi confirmed" });
+  ny_confirmed.timeline.push({ at: ago(42), label: "Kolten Y. applied" }, { at: ago(38), label: "Kolten Y. confirmed" });
   const ny_completed = build({
     id: "r_ny_completed", cityKey: ny, listerId: "u_lee", address: "245 E 63rd St, Apt 9B", neighborhood: "Upper East Side", price: 985000,
     beds: 1, baths: 1, sqft: 820, start: dayAt(-3, 13), hours: 3, offer: { type: "flat", amount: 150 }, status: "completed", gradient: 4,
@@ -514,7 +514,7 @@ export function seedNotifications(): Notification[] {
   });
   return [
     n("n1", "u_lee", "applicant", "3 applicants on 2210 Rio Grande", "Sofia Lindqvist just applied. Review trust cards and confirm a host.", 3, "r_applied"),
-    n("n2", "u_lee", "reminder", "Open house today", "Kolten Yamaguchi is confirmed for 5112 Duval St. Check-in opens shortly.", 1, "r_today"),
+    n("n2", "u_lee", "reminder", "Open house today", "Kolten Y. is confirmed for 5112 Duval St. Check-in opens shortly.", 1, "r_today"),
     n("n3", "u_lee", "completed", "Kolten submitted the summary", "3306 Hemlock Ave: 14 visitors, 3 leads. Confirm completion and rate Kolten.", 40, "r_completed"),
     n("n4", "u_lee", "reminder", "No applicants yet for 1407 W 38th", "Consider raising the offer or widening the audience.", 5, "r_open", true),
     n("n5", "u_kolten", "reminder", "Today: 5112 Duval St", "You're confirmed. Review the handoff checklist and check in on arrival.", 1, "r_today"),
@@ -522,7 +522,7 @@ export function seedNotifications(): Notification[] {
     n("n7", "u_kolten", "urgent", "Urgent: 1109 E 12th St needs a host", "Flat fee $150, tomorrow 11 AM, 3.1 mi away.", 2, "r_feed2"),
     n("n8", "u_kolten", "payment", "Dispute opened on 3815 Speedway", "A reviewer will look at the signed terms and record.", 48, "r_disputed", true),
     n("n9", "u_lee", "applicant", "3 applicants on 88 Greenwich St", "Jules Moreau just applied. Review trust cards and confirm a host.", 3, "r_ny_applied", false, "nyc"),
-    n("n10", "u_lee", "reminder", "Open house tomorrow", "Kolten Yamaguchi is confirmed for 17 Henry St. Handoff details unlock soon.", 2, "r_ny_confirmed", false, "nyc"),
+    n("n10", "u_lee", "reminder", "Open house tomorrow", "Kolten Y. is confirmed for 17 Henry St. Handoff details unlock soon.", 2, "r_ny_confirmed", false, "nyc"),
     n("n11", "u_kolten", "confirmed", "You're confirmed for 17 Henry St", "Lee W. confirmed you. Contact details are now visible.", 38, "r_ny_confirmed", true, "nyc"),
     n("n12", "u_kolten", "urgent", "Urgent: Williamsburg needs a host", "Flat fee $175, tomorrow 11 AM, nearby.", 2, "r_ny_feed2", false, "nyc"),
   ];
