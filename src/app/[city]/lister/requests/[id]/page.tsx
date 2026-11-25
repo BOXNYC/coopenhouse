@@ -11,6 +11,7 @@ import { Badge, Button, Card, EmptyState, LIFECYCLE_STEPS, SectionTitle, Skeleto
 import { AlertIcon, BoltIcon, CalendarIcon, CheckCircleIcon, ClipboardIcon, InfoIcon, MailIcon, PhoneIcon, SendIcon, UsersIcon } from "@/components/ui/icons";
 import { deleteRequest, publishRequest, sendMessage, updateRequest } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { useCity } from "@/lib/city";
 import { useApplicants, useMutation, useRequest, useUser } from "@/lib/hooks";
 import { hoursUntil } from "@/lib/rules";
 import { ListingMap } from "@/components/ListingMap";
@@ -103,6 +104,7 @@ function Messages({ request, hostName, userId }: { request: OpenHouseRequest; ho
 }
 
 function Recap({ r, hostName }: { r: OpenHouseRequest; hostName?: string }) {
+  const { path } = useCity();
   const eventLink = r.confirmedHostId || r.checkIn || r.summary;
   const rows: [string, ReactNode][] = [];
   if (r.status === "cancelled-lister" || r.status === "cancelled-host" || r.status === "expired") {
@@ -131,7 +133,7 @@ function Recap({ r, hostName }: { r: OpenHouseRequest; hostName?: string }) {
       </Card>
       <div className="flex flex-wrap gap-2">
         {r.status !== "cancelled-lister" && r.status !== "cancelled-host" && r.status !== "expired" && eventLink && (
-          <Button href={`/events/${r.id}`} variant="primary" icon={<ClipboardIcon size={18} />}>
+          <Button href={path(`/events/${r.id}`)} variant="primary" icon={<ClipboardIcon size={18} />}>
             Open event record
           </Button>
         )}
@@ -161,6 +163,7 @@ function Timeline({ r }: { r: OpenHouseRequest }) {
 }
 
 export default function Page() {
+  const { path } = useCity();
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const toast = useToast();
@@ -183,23 +186,23 @@ export default function Page() {
   const del = useMutation(() => deleteRequest(id, uid), {
     onSuccess: () => {
       toast.info("Draft deleted.");
-      router.replace("/lister");
+      router.replace(path("/lister"));
     },
     onError: (e) => toast.error(e.message),
   });
 
   const shell = (children: ReactNode, title = "Request") => (
-    <AppShell role="lister" title={title} back="/lister">
+    <AppShell role="lister" title={title} back={path("/lister")}>
       {children}
     </AppShell>
   );
 
   if (loading || !currentUser) return shell(<PageSkeleton />);
   if (error || !r) {
-    return shell(<EmptyState icon={<AlertIcon size={22} />} title="Request not found" description={error?.message ?? "It may have been deleted."} action={<Button href="/lister" variant="outline">Back to dashboard</Button>} />);
+    return shell(<EmptyState icon={<AlertIcon size={22} />} title="Request not found" description={error?.message ?? "It may have been deleted."} action={<Button href={path("/lister")} variant="outline">Back to dashboard</Button>} />);
   }
   if (r.listerId !== currentUser.id) {
-    return shell(<EmptyState icon={<AlertIcon size={22} />} title="Not your request" description="Only the Lister who posted this can manage it." action={<Button href="/lister" variant="outline">Back to dashboard</Button>} />);
+    return shell(<EmptyState icon={<AlertIcon size={22} />} title="Not your request" description="Only the Lister who posted this can manage it." action={<Button href={path("/lister")} variant="outline">Back to dashboard</Button>} />);
   }
 
   const hrs = hoursUntil(r.startsAt);
@@ -355,7 +358,7 @@ export default function Page() {
               </p>
               <p className="text-sm text-brand-800">Check-in, summary and ratings happen on the event page.</p>
             </div>
-            <Button href={`/events/${r.id}`} variant="primary" icon={<ClipboardIcon size={18} />}>
+            <Button href={path(`/events/${r.id}`)} variant="primary" icon={<ClipboardIcon size={18} />}>
               Open day-of view
             </Button>
           </Card>
@@ -379,14 +382,14 @@ export default function Page() {
             <p className="font-semibold text-ink">Want to try again?</p>
             <p className="text-sm text-muted">Start a new request with a fresh time. {formatCurrency(r.price)} listing at {title}.</p>
           </div>
-          <Button href="/lister/new" variant="accent" icon={<UsersIcon size={18} />}>
+          <Button href={path("/lister/new")} variant="accent" icon={<UsersIcon size={18} />}>
             Repost
           </Button>
         </Card>
       )}
       {closed && !cancelledish && (
         <p className="text-sm text-muted">
-          <Link href={`/events/${r.id}`} className="font-medium text-brand-700 underline">
+          <Link href={path(`/events/${r.id}`)} className="font-medium text-brand-700 underline">
             View the full event record
           </Link>{" "}
           for the summary, leads and payment status.

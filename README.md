@@ -1,15 +1,15 @@
 # CoOpenHouse
 
-A mobile-first demo of a marketplace that matches a listing agent who needs an open house covered with a verified, licensed agent nearby. Built with Next.js 16 (App Router), React 19, Tailwind v4 and TypeScript. See `DESIGN.md` for the product design.
+A mobile-first demo of a marketplace that matches a listing agent who needs an open house covered with a verified, licensed agent nearby. Built with pnpm, Next.js 16 (App Router), React 19, Tailwind v4 and TypeScript. See `DESIGN.md` for the product design.
 
 ## Running the demo
 
 ```bash
-npm install
-npm run dev     # http://localhost:3000
-npm run build   # production build
-npm run lint
-npx tsc --noEmit
+pnpm install
+pnpm dev     # http://localhost:3000
+pnpm build   # production build
+pnpm lint
+pnpm exec tsc --noEmit
 ```
 
 There is no database. All data lives in memory in the browser (seeded on first load, reset on full refresh). API calls are async and have simulated latency of 300-900 ms (`API_LATENCY` in `src/lib/api.ts`). Auth state (the signed-in user id) is kept in `localStorage`.

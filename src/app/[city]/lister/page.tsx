@@ -9,6 +9,7 @@ import { SkeletonCard } from "@/components/ui/Skeleton";
 import { Tabs } from "@/components/ui/Tabs";
 import { HomeIcon, PlusIcon, UsersIcon } from "@/components/ui/icons";
 import { useAuth } from "@/lib/auth";
+import { useCity } from "@/lib/city";
 import { useAsync, useRequests } from "@/lib/hooks";
 import { listUsers } from "@/lib/api";
 import { ACTIVE_STATUSES } from "@/lib/rules";
@@ -27,9 +28,10 @@ function Tile({ label, value, tone }: { label: string; value: number; tone?: "ac
 }
 
 export default function ListerDashboard() {
+  const { path, key: cityKey } = useCity();
   const { currentUser } = useAuth();
   const [tab, setTab] = useState<Tab>("active");
-  const { data, loading } = useRequests({ listerId: currentUser?.id ?? "" });
+  const { data, loading } = useRequests({ listerId: currentUser?.id ?? "", cityKey });
   const users = useAsync(listUsers, "users");
 
   const { active, past, needsReview, confirmed, open } = useMemo(() => {
@@ -71,7 +73,7 @@ export default function ListerDashboard() {
       role="lister"
       title={currentUser ? `Hi, ${currentUser.name.split(" ")[0]}` : "Requests"}
       subtitle="Your open house requests"
-      actions={<Button href="/lister/new" size="sm" icon={<PlusIcon size={16} />} className="hidden md:inline-flex">New request</Button>}
+      actions={<Button href={path("/lister/new")} size="sm" icon={<PlusIcon size={16} />} className="hidden md:inline-flex">New request</Button>}
     >
       <div className="space-y-5">
         <div className="grid grid-cols-3 gap-2.5">
@@ -94,10 +96,10 @@ export default function ListerDashboard() {
               icon={tab === "active" ? <HomeIcon size={22} /> : <UsersIcon size={22} />}
               title={tab === "active" ? "No active requests" : "Nothing here yet"}
               description={tab === "active" ? "Need coverage? Post an open house in under two minutes." : "Completed and closed requests show up here."}
-              action={tab === "active" ? <Button href="/lister/new" icon={<PlusIcon size={16} />}>New request</Button> : undefined}
+              action={tab === "active" ? <Button href={path("/lister/new")} icon={<PlusIcon size={16} />}>New request</Button> : undefined}
             />
           ) : (
-            list.map((r) => <RequestCard key={r.id} request={r} href={`/lister/requests/${r.id}`} viewerId={currentUser?.id} footer={footer(r)} />)
+            list.map((r) => <RequestCard key={r.id} request={r} href={path(`/lister/requests/${r.id}`)} viewerId={currentUser?.id} footer={footer(r)} />)
           )}
         </div>
       </div>

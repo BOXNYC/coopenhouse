@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/lib/cn";
+import { cityPath } from "@/lib/cities";
 import { dayLabel, formatCurrency, formatDistance, formatTime } from "@/lib/format";
 import { displayAddress } from "@/lib/rules";
 import type { OpenHouseRequest, User } from "@/lib/types";
@@ -25,7 +26,7 @@ export function HostRequestCard({
 }) {
   return (
     <Link
-      href={`/host/requests/${r.id}`}
+      href={cityPath(r.cityKey, `/host/requests/${r.id}`)}
       className={cn(
         "block rounded-card border bg-surface p-3.5 shadow-card transition hover:shadow-pop active:scale-[0.995]",
         r.urgent ? "border-danger-600/40" : "border-line",

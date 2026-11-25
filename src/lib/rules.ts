@@ -1,4 +1,5 @@
 // Pure business rules shared by the API and the UI (no I/O).
+import { ALL_NEIGHBORHOODS, type CityKey } from "./cities";
 import type {
   AudienceMode,
   OpenHouseRequest,
@@ -9,22 +10,18 @@ import type {
 
 export const ACCESS_REVEAL_HOURS = 48;
 
-export const AUSTIN_CENTER = { lat: 30.2672, lng: -97.7431 };
+/** Neighborhood coordinates across every pilot city (names are unique). Per-city lists live in cities.ts. */
+export const NEIGHBORHOODS = ALL_NEIGHBORHOODS;
 
-export const NEIGHBORHOODS: Record<string, { lat: number; lng: number }> = {
-  "Hyde Park": { lat: 30.3043, lng: -97.7291 },
-  "Zilker": { lat: 30.2669, lng: -97.7729 },
-  "East Austin": { lat: 30.2634, lng: -97.7137 },
-  "South Congress": { lat: 30.2488, lng: -97.7497 },
-  "Mueller": { lat: 30.2999, lng: -97.7048 },
-  "Tarrytown": { lat: 30.3011, lng: -97.7683 },
-  "Barton Hills": { lat: 30.2543, lng: -97.7783 },
-  "Bouldin Creek": { lat: 30.2517, lng: -97.7564 },
-  "Cherrywood": { lat: 30.2929, lng: -97.7152 },
-  "Circle C": { lat: 30.1819, lng: -97.8536 },
-  "Westlake": { lat: 30.2977, lng: -97.8067 },
-  "Allandale": { lat: 30.3392, lng: -97.7454 },
-};
+/** The user with their home base swapped to the one for `city` (unchanged if they have none there). */
+export function userInCity(u: User, city: CityKey): User {
+  const h = u.cityHomes?.[city];
+  return h ? { ...u, ...h } : u;
+}
+
+export function isLicensedIn(u: Pick<User, "licenseState" | "licenseStates">, state: string): boolean {
+  return u.licenseState === state || !!u.licenseStates?.includes(state);
+}
 
 export function haversineMiles(aLat: number, aLng: number, bLat: number, bLng: number): number {
   const R = 3958.8;
@@ -113,7 +110,7 @@ export interface Eligibility {
 export function hostEligibility(req: OpenHouseRequest, host: User, lister: User | undefined, now = Date.now()): Eligibility {
   const reasons: string[] = [];
   if (host.accountStatus === "suspended") reasons.push("Your account is suspended.");
-  if (host.licenseState !== req.state) reasons.push(`You are not licensed in ${req.state}.`);
+  if (!isLicensedIn(host, req.state)) reasons.push(`You are not licensed in ${req.state}.`);
   for (const b of req.audience.requireBadges) {
     if (!host.badges[b]) {
       const label = { license: "License", brokerage: "Brokerage", id: "ID" }[b];

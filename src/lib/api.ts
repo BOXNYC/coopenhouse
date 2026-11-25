@@ -3,9 +3,10 @@
 // latency, then returns a deep clone (callers can never mutate the store).
 import { emitChange, getDB, getUserSync, uid } from "./db";
 import { offerLabel } from "./format";
+import { CITIES, CITY_KEYS, type CityKey } from "./cities";
+import { makeUser } from "./seed";
 import {
   agreementTerms,
-  AUSTIN_CENTER,
   defaultChecklist,
   haversineMiles,
   hostEligibility,
@@ -13,11 +14,14 @@ import {
   isApplicant,
   mutualConnections,
   NEIGHBORHOODS,
+  isLicensedIn,
   trustScore,
+  userInCity,
   type Eligibility,
   type Mutuals,
 } from "./rules";
 import type {
+  ActiveRole,
   Application,
   Availability,
   CancelResult,
@@ -86,7 +90,7 @@ function patchUser(id: string, fn: (u: User) => Partial<User>): void {
 }
 function note(userId: string, type: NotificationType, title: string, body: string, requestId?: string): void {
   getDB().notifications.unshift({
-    id: uid("n"), userId, type, title, body, requestId, createdAt: new Date().toISOString(), read: false,
+    id: uid("n"), userId, type, title, body, requestId, cityKey: requestId ? getDB().requests.find((x) => x.id === requestId)?.cityKey : undefined, createdAt: new Date().toISOString(), read: false,
   });
 }
 function log(r: OpenHouseRequest, label: string): void {
@@ -118,7 +122,8 @@ function maybeSettle(r: OpenHouseRequest): void {
 function withDistance(r: OpenHouseRequest, viewerId?: string): OpenHouseRequest {
   const v = getUserSync(viewerId);
   if (!v) return r;
-  return { ...r, distanceMiles: haversineMiles(v.homeLat, v.homeLng, r.lat, r.lng) };
+  const h = userInCity(v, r.cityKey);
+  return { ...r, distanceMiles: haversineMiles(h.homeLat, h.homeLng, r.lat, r.lng) };
 }
 function requireLister(r: OpenHouseRequest, userId: string): void {
   if (r.listerId !== userId) throw new ApiError("forbidden", "Only the Lister can do that.");
@@ -128,9 +133,10 @@ function requireConfirmedHost(r: OpenHouseRequest, userId: string): void {
 }
 function notifyNearbyHosts(r: OpenHouseRequest, excludeId: string | null): void {
   for (const u of getDB().users) {
-    if (u.role === "lister" || u.id === r.listerId || u.id === excludeId) continue;
+    if (u.id === r.listerId || u.id === excludeId) continue;
     if (!u.availability.alertsEnabled) continue;
-    const d = haversineMiles(u.homeLat, u.homeLng, r.lat, r.lng);
+    const h = userInCity(u, r.cityKey);
+    const d = haversineMiles(h.homeLat, h.homeLng, r.lat, r.lng);
     if (d <= u.radiusMiles) {
       note(u.id, "urgent", `Urgent: ${r.neighborhood} needs a host`, `${offerLabel(r.offer)}, ${d} mi away.`, r.id);
     }
@@ -150,6 +156,8 @@ export interface RequestFilters {
   maxDistanceMiles?: number;
   /** In host feed mode, include requests beyond the host's radius. */
   ignoreRadius?: boolean;
+  /** Only requests in this pilot city. */
+  cityKey?: CityKey;
   q?: string;
   upcomingOnly?: boolean;
   sort?: "soonest" | "nearest" | "newest";
@@ -160,6 +168,7 @@ export async function listRequests(filters: RequestFilters = {}): Promise<OpenHo
     const now = Date.now();
     const host = getUserSync(filters.hostId);
     let list = getDB().requests.slice();
+    if (filters.cityKey) list = list.filter((r) => r.cityKey === filters.cityKey);
     if (filters.listerId) list = list.filter((r) => r.listerId === filters.listerId);
     if (filters.participantId) {
       const id = filters.participantId;
@@ -169,7 +178,7 @@ export async function listRequests(filters: RequestFilters = {}): Promise<OpenHo
       if (!filters.status) {
         list = list.filter((r) => (r.status === "open" || r.status === "applied") && !r.confirmedHostId && new Date(r.startsAt).getTime() > now);
       }
-      list = list.filter((r) => r.listerId !== host.id && r.state === host.licenseState);
+      list = list.filter((r) => r.listerId !== host.id && (!!filters.cityKey || isLicensedIn(host, r.state)));
     }
     if (filters.status) list = list.filter((r) => filters.status!.includes(r.status));
     if (filters.offerTypes?.length) list = list.filter((r) => filters.offerTypes!.includes(r.offer.type));
@@ -207,9 +216,28 @@ export async function listUsers(): Promise<User[]> {
   return call(() => getDB().users);
 }
 
+export async function registerUser(input: { name: string; brokerage: string; defaultMode: ActiveRole; cityKey?: CityKey }): Promise<User> {
+  return mutate(() => {
+    const name = input.name.trim();
+    if (!name) throw new ApiError("invalid", "Please enter your name.");
+    const initials = name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+    const colors = ["#0f5565", "#c8642b", "#5f4fa8", "#2f6fb0", "#1e8a4c", "#a44f20"];
+    const home = CITIES[input.cityKey ?? "austin"];
+    const u = makeUser({
+      id: uid("u"), name, defaultMode: input.defaultMode, initials, avatarColor: colors[getDB().users.length % colors.length],
+      brokerage: input.brokerage.trim() || "Independent", homeArea: home.defaultHome.area, homeLat: home.defaultHome.lat, homeLng: home.defaultHome.lng,
+      licenseState: home.state, licenseStates: CITY_KEYS.map((k) => CITIES[k].state),
+      phone: `${home.phoneAreaCode}5550100`,
+      cityHomes: Object.fromEntries(CITY_KEYS.map((k) => [k, { homeArea: CITIES[k].defaultHome.area, homeLat: CITIES[k].defaultHome.lat, homeLng: CITIES[k].defaultHome.lng }])),
+    });
+    getDB().users.push(u);
+    return u;
+  });
+}
+
 export async function updateUser(
   id: string,
-  patch: Partial<Pick<User, "name" | "brokerage" | "homeArea" | "homeLat" | "homeLng" | "radiusMiles" | "bio" | "phone" | "eoInsured">>,
+  patch: Partial<Pick<User, "name" | "brokerage" | "homeArea" | "homeLat" | "homeLng" | "radiusMiles" | "bio" | "phone" | "eoInsured" | "defaultMode">>,
 ): Promise<User> {
   return mutate(() => {
     mustUser(id);
@@ -254,8 +282,8 @@ export async function getEligibility(requestId: string, hostId: string): Promise
 export interface NewRequestInput {
   address: string;
   neighborhood: string;
-  city?: string;
-  state?: string;
+  /** Pilot city key; sets city/state and map coordinates. Defaults to austin. */
+  cityKey?: CityKey;
   price: number;
   beds: number;
   baths: number;
@@ -281,15 +309,18 @@ const GRADIENTS = [
 export async function createRequest(input: NewRequestInput, listerId: string): Promise<OpenHouseRequest> {
   return mutate(() => {
     const lister = mustUser(listerId);
-    const geo = NEIGHBORHOODS[input.neighborhood] ?? AUSTIN_CENTER;
+    const cityKey = input.cityKey ?? "austin";
+    const cfg = CITIES[cityKey];
+    const geo = cfg.neighborhoods[input.neighborhood] ?? NEIGHBORHOODS[input.neighborhood] ?? cfg.center;
     const now = new Date().toISOString();
     const r: OpenHouseRequest = {
       id: uid("r"),
       listerId,
       address: input.address,
       neighborhood: input.neighborhood,
-      city: input.city ?? "Austin",
-      state: input.state ?? "TX",
+      cityKey,
+      city: cfg.cityName,
+      state: cfg.state,
       price: input.price,
       beds: input.beds,
       baths: input.baths,
@@ -333,8 +364,9 @@ export async function createRequest(input: NewRequestInput, listerId: string): P
     getDB().requests.unshift(r);
     if (!input.draft) {
       for (const u of getDB().users) {
-        if (u.role === "lister" || !u.availability.alertsEnabled) continue;
-        const d = haversineMiles(u.homeLat, u.homeLng, r.lat, r.lng);
+        if (!u.availability.alertsEnabled) continue;
+        const h = userInCity(u, r.cityKey);
+        const d = haversineMiles(h.homeLat, h.homeLng, r.lat, r.lng);
         if (d <= u.radiusMiles) note(u.id, "system", `New open house in ${r.neighborhood}`, `${offerLabel(r.offer)}, ${d} mi away.`, r.id);
       }
     }

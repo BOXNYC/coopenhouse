@@ -8,9 +8,11 @@ import { TIME_PRESETS, quickDates, toISO } from "@/components/lister/datetime";
 import { Badge, Button, Card, Field, Input, LabeledInput, Select, Stepper, Textarea, useToast } from "@/components/ui";
 import { BuildingIcon, ClockIcon, InfoIcon, KeyIcon, LockIcon, UsersIcon, ShieldCheckIcon } from "@/components/ui/icons";
 import { useAuth } from "@/lib/auth";
+import { useCity } from "@/lib/city";
 import { createRequest, type NewRequestInput } from "@/lib/api";
 import { useMutation } from "@/lib/hooks";
-import { NEIGHBORHOODS, agreementTerms } from "@/lib/rules";
+import { agreementTerms } from "@/lib/rules";
+import { CITIES, type CityKey } from "@/lib/cities";
 import { cn } from "@/lib/cn";
 import { formatCurrency, offerLabel, formatWindow } from "@/lib/format";
 import type { AccessMethod, AudienceMode, BadgeKind, OpenHouseRequest, User } from "@/lib/types";
@@ -94,7 +96,8 @@ function Toggle({ checked, onChange, label, desc }: { checked: boolean; onChange
   );
 }
 
-function buildPreview(f: Form, user: User): OpenHouseRequest {
+function buildPreview(f: Form, user: User, cityKey: CityKey): OpenHouseRequest {
+  const cfg = CITIES[cityKey];
   const valid = f.date && f.start && f.end;
   const startsAt = valid ? toISO(f.date, f.start) : new Date(Date.now() + 86_400_000).toISOString();
   const endsAt = valid ? toISO(f.date, f.end) : new Date(Date.now() + 86_400_000 + 3 * 3_600_000).toISOString();
@@ -104,8 +107,9 @@ function buildPreview(f: Form, user: User): OpenHouseRequest {
     listerId: user.id,
     address: f.address.trim() || "Your listing address",
     neighborhood: f.neighborhood || "Neighborhood",
-    city: "Austin",
-    state: "TX",
+    cityKey,
+    city: cfg.cityName,
+    state: cfg.state,
     price: Number(f.price) || 0,
     beds: Number(f.beds) || 0,
     baths: Number(f.baths) || 0,
@@ -165,6 +169,7 @@ function validateStep(step: number, f: Form): Errors {
 }
 
 export default function Page() {
+  const { path, key: cityKey, city } = useCity();
   const { currentUser } = useAuth();
   const router = useRouter();
   const toast = useToast();
@@ -205,6 +210,7 @@ export default function Page() {
       const input: NewRequestInput = {
         address: form.address.trim(),
         neighborhood: form.neighborhood,
+        cityKey,
         price: Number(form.price),
         beds: Number(form.beds) || 0,
         baths: Number(form.baths) || 0,
@@ -230,13 +236,13 @@ export default function Page() {
     {
       onSuccess: ({ r, draft }) => {
         toast.success(draft ? "Draft saved. Publish it whenever you are ready." : "Your request is live. Nearby verified agents are being alerted.", draft ? "Draft saved" : "Published");
-        router.push(`/lister/requests/${r.id}`);
+        router.push(path(`/lister/requests/${r.id}`));
       },
       onError: (e) => toast.error(e.message, "Could not save"),
     },
   );
 
-  const preview = useMemo(() => (currentUser ? buildPreview(form, currentUser) : null), [form, currentUser]);
+  const preview = useMemo(() => (currentUser ? buildPreview(form, currentUser, cityKey) : null), [form, currentUser, cityKey]);
 
   const next = () => {
     const e = validateStep(step, form);
@@ -266,7 +272,7 @@ export default function Page() {
   const isLast = step === STEPS.length - 1;
 
   return (
-    <AppShell role="lister" title="New request" subtitle={`Step ${step + 1} of ${STEPS.length}`} back="/lister">
+    <AppShell role="lister" title="New request" subtitle={`Step ${step + 1} of ${STEPS.length}`} back={path("/lister")}>
       <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-5">
           <Stepper steps={STEPS} current={step} />
@@ -274,12 +280,12 @@ export default function Page() {
           {step === 0 && (
             <Card className="space-y-4">
               <h2 className="text-lg font-semibold text-ink">Listing and time</h2>
-              <LabeledInput label="Street address" placeholder="1204 W 6th St" value={form.address} error={errors.address} onChange={(e) => set("address", e.target.value)} autoComplete="street-address" hint="Hosts only see your neighborhood until they apply." />
+              <LabeledInput label="Street address" placeholder={cityKey === "nyc" ? "245 W 74th St, Apt 6B" : "1204 W 6th St"} value={form.address} error={errors.address} onChange={(e) => set("address", e.target.value)} autoComplete="street-address" hint="Hosts only see your neighborhood until they apply." />
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Neighborhood" htmlFor="nb" error={errors.neighborhood}>
                   <Select id="nb" value={form.neighborhood} invalid={!!errors.neighborhood} onChange={(e) => set("neighborhood", e.target.value)}>
                     <option value="">Select...</option>
-                    {Object.keys(NEIGHBORHOODS).map((n) => (
+                    {Object.keys(city.neighborhoods).map((n) => (
                       <option key={n}>{n}</option>
                     ))}
                   </Select>

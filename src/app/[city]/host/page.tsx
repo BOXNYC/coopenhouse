@@ -14,10 +14,11 @@ import { OFFER_META } from "@/components/ui/OfferChip";
 import { CalendarIcon, SearchIcon, SlidersIcon } from "@/components/ui/icons";
 import * as api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { useCity } from "@/lib/city";
 import { cn } from "@/lib/cn";
 import { dayLabel, formatTime } from "@/lib/format";
 import { useAsync, useRequests } from "@/lib/hooks";
-import { hostEligibility } from "@/lib/rules";
+import { hostEligibility, userInCity } from "@/lib/rules";
 import type { OfferType, OpenHouseRequest, User } from "@/lib/types";
 
 type Sort = "soonest" | "nearest" | "newest";
@@ -55,7 +56,9 @@ export default function Page() {
 }
 
 function Feed() {
-  const { currentUser: me } = useAuth();
+  const { path, key: cityKey, city } = useCity();
+  const { currentUser } = useAuth();
+  const me = useMemo(() => (currentUser ? userInCity(currentUser, cityKey) : null), [currentUser, cityKey]);
   const [view, setView] = useState<"feed" | "map" | "schedule">("map");
   const [offers, setOffers] = useState<OfferType[]>([]);
   const [sort, setSort] = useState<Sort>("soonest");
@@ -66,12 +69,13 @@ function Feed() {
 
   const feed = useRequests({
     hostId: me?.id,
+    cityKey,
     offerTypes: offers.length ? offers : undefined,
     maxDistanceMiles: miles,
     ignoreRadius: true,
     sort,
   });
-  const schedule = useRequests({ participantId: me?.id, upcomingOnly: true, sort: "soonest" });
+  const schedule = useRequests({ participantId: me?.id, cityKey, upcomingOnly: true, sort: "soonest" });
   const users = useAsync(() => api.listUsers(), "users");
 
   const userById = useMemo(() => new Map<string, User>((users.data ?? []).map((u) => [u.id, u])), [users.data]);
@@ -184,7 +188,7 @@ function Feed() {
             {me.availability.alertsEnabled ? "Alerts on" : "Alerts off"} · {me.availability.days.length} days a week
           </p>
         </div>
-        <Link href="/profile" className="shrink-0 text-sm font-semibold text-brand-700 hover:underline">
+        <Link href={path("/profile")} className="shrink-0 text-sm font-semibold text-brand-700 hover:underline">
           Edit
         </Link>
       </Card>
@@ -229,8 +233,8 @@ function Feed() {
                       {dayLabel(r.startsAt)} at {formatTime(r.startsAt)}
                     </span>
                     <span className="flex gap-3 font-semibold text-brand-700">
-                      <Link href={`/host/requests/${r.id}`} className="hover:underline">Details</Link>
-                      {confirmed && <Link href={`/events/${r.id}`} className="hover:underline">Event page</Link>}
+                      <Link href={path(`/host/requests/${r.id}`)} className="hover:underline">Details</Link>
+                      {confirmed && <Link href={path(`/events/${r.id}`)} className="hover:underline">Event page</Link>}
                     </span>
                   </div>
                 </div>
@@ -318,7 +322,7 @@ function Feed() {
             <EmptyState
               icon={<SearchIcon size={22} />}
               title="No open houses match"
-              description="Try a wider distance or fewer filters, or grow your radius in your profile."
+              description={`Try a wider distance or fewer filters, or grow your radius in your profile. Showing ${city.name} only.`}
             />
           ) : (
             <>

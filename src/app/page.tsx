@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/Button";
-import { BoltIcon, BuildingIcon, ClipboardIcon, IdCardIcon, ShieldCheckIcon } from "@/components/ui/icons";
+import { CITIES, CITY_KEYS } from "@/lib/cities";
+import { BoltIcon, MapPinIcon, BuildingIcon, ClipboardIcon, IdCardIcon, ShieldCheckIcon } from "@/components/ui/icons";
 import { OFFER_META } from "@/components/ui/OfferChip";
 
 const trust = [
@@ -25,17 +26,47 @@ export default function Landing() {
 
       <section className="mx-auto max-w-5xl px-5 pb-12 pt-8 md:pt-16">
         <p className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-accent-50 px-3 py-1 text-xs font-semibold text-accent-700">
-          <BoltIcon size={13} /> Austin, TX pilot
+          <BoltIcon size={13} /> Pilot cities: {CITY_KEYS.map((k) => CITIES[k].name).join(" · ")}
         </p>
-        <h1 className="max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-ink md:text-6xl">
-          Cover any open house with an agent you can trust.
-        </h1>
-        <p className="mt-4 max-w-xl text-lg text-ink-soft">
-          Got a conflict? Post your open house in under two minutes and match with a verified, licensed agent nearby. Want buyer leads? Find open houses near you that fit your schedule.
-        </p>
+        <div className="grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr] md:gap-8">
+          <div>
+            <h1 className="text-4xl font-semibold leading-[1.1] tracking-tight text-ink md:text-5xl">Find an Agent to Cover Your Open House</h1>
+            <p className="mt-4 text-lg text-ink-soft">
+              Got a conflict? Post your open house in under two minutes and match with a verified, licensed agent nearby.
+            </p>
+          </div>
+          <div aria-hidden="true" className="flex items-center gap-3 md:flex-col">
+            <span className="h-px flex-1 bg-line-strong md:h-auto md:w-px" />
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line-strong bg-surface text-sm font-semibold uppercase tracking-wide text-brand-700 shadow-card">or</span>
+            <span className="h-px flex-1 bg-line-strong md:h-auto md:w-px" />
+          </div>
+          <div>
+            <h2 className="text-4xl font-semibold leading-[1.1] tracking-tight text-ink md:text-5xl">Cover an Agent&apos;s Open House</h2>
+            <p className="mt-4 text-lg text-ink-soft">
+              Want buyer leads? Find open houses near you that fit your schedule.
+            </p>
+          </div>
+        </div>
         <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-          <Button href="/login" size="lg" variant="accent">Try the demo</Button>
+          <Button href="/login" size="lg" variant="accent">Try it!</Button>
           <Button href="#how" size="lg" variant="outline">How it works</Button>
+        </div>
+      </section>
+
+      <section id="cities" aria-labelledby="cities-h" className="mx-auto max-w-5xl px-5 pb-12">
+        <h2 id="cities-h" className="text-2xl font-semibold text-ink">Choose your city</h2>
+        <p className="mt-1 text-ink-soft">CoOpenHouse is piloting in two markets. Pick yours to see open houses and post requests there.</p>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          {CITY_KEYS.map((k) => (
+            <Link key={k} href={`/${k}`} className="group flex items-center gap-4 rounded-card border border-line bg-surface p-5 shadow-card transition hover:shadow-pop active:scale-[0.99]">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-700 text-white"><MapPinIcon size={22} /></span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-lg font-semibold text-ink">{CITIES[k].name}</span>
+                <span className="block text-sm text-ink-soft">{CITIES[k].tagline}</span>
+              </span>
+              <span className="text-sm font-semibold text-brand-700 group-hover:underline">Enter &rarr;</span>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -68,11 +99,11 @@ export default function Landing() {
             </div>
           ))}
         </div>
-        <div className="mt-10 rounded-card bg-[#0b4250] p-6 text-white md:p-8">
+        {/* <div className="mt-10 rounded-card bg-[#0b4250] p-6 text-white md:p-8">
           <h2 className="text-xl font-semibold">See both sides in a minute</h2>
           <p className="mt-1 text-[#d0e6e7]">Sign in as a Lister or a Host to explore. No account needed.</p>
           <Button href="/login" variant="accent" className="mt-4">Pick a demo login</Button>
-        </div>
+        </div> */}
       </section>
 
       <footer className="mx-auto max-w-5xl px-5 pb-10 text-xs text-muted">

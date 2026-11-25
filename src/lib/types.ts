@@ -1,7 +1,14 @@
 // Shared domain types for CoOpenHouse. Keep stable: screens are built on these.
 
-export type Role = "lister" | "host" | "both";
-/** The single role a login is acting as at any moment. */
+import type { CityKey } from "./cities";
+
+export interface CityHome {
+  homeArea: string;
+  homeLat: number;
+  homeLng: number;
+}
+
+/** Display mode: Lister and Host are views, not identities. Every user can use both. */
 export type ActiveRole = "lister" | "host";
 
 export interface Badges {
@@ -45,7 +52,8 @@ export type AccountStatus = "active" | "under-review" | "suspended";
 export interface User {
   id: string;
   name: string;
-  role: Role;
+  /** The display mode this user lands in by default. */
+  defaultMode: ActiveRole;
   initials: string;
   /** Tailwind-independent CSS color for avatar background. */
   avatarColor: string;
@@ -54,12 +62,16 @@ export interface User {
   brokerage: string;
   licenseNumber: string;
   licenseState: string;
+  /** Additional states this agent is licensed in (beyond licenseState). */
+  licenseStates?: string[];
   yearsLicensed: number;
   badges: Badges;
   eoInsured: boolean;
   homeArea: string;
   homeLat: number;
   homeLng: number;
+  /** Per-city home base. Falls back to homeArea/homeLat/homeLng when a city has no entry. */
+  cityHomes?: Partial<Record<CityKey, CityHome>>;
   radiusMiles: number;
   bio?: string;
   stats: UserStats;
@@ -213,6 +225,8 @@ export interface OpenHouseRequest {
   listerId: string;
   address: string;
   neighborhood: string;
+  /** Registry key of the pilot city this request belongs to. */
+  cityKey: CityKey;
   city: string;
   state: string;
   price: number;
@@ -277,6 +291,8 @@ export interface Notification {
   title: string;
   body: string;
   requestId?: string;
+  /** City the notification relates to (defaults to austin when absent). */
+  cityKey?: CityKey;
   createdAt: string;
   read: boolean;
 }

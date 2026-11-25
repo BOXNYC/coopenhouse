@@ -6,7 +6,8 @@ import { OfferPicker, draftFromOffer, offerFromDraft, validateOffer, type OfferD
 import { splitISO, toISO } from "./datetime";
 import { cancelRequest, updateRequest, type RequestPatch } from "@/lib/api";
 import { useMutation } from "@/lib/hooks";
-import { NEIGHBORHOODS, hoursUntil } from "@/lib/rules";
+import { CITIES } from "@/lib/cities";
+import { hoursUntil } from "@/lib/rules";
 import { formatCurrency, offerLabel } from "@/lib/format";
 import type { OpenHouseRequest } from "@/lib/types";
 
@@ -125,7 +126,7 @@ export function EditModal({ open, onClose, request, userId }: { open: boolean; o
         <LabeledInput label="Street address" value={f.address} onChange={(ev) => setF({ ...f, address: ev.target.value })} />
         <Field label="Neighborhood" htmlFor="en">
           <Select id="en" value={f.neighborhood} onChange={(ev) => setF({ ...f, neighborhood: ev.target.value })}>
-            {[...new Set([request.neighborhood, ...Object.keys(NEIGHBORHOODS)])].map((n) => (
+            {[...new Set([request.neighborhood, ...Object.keys(CITIES[request.cityKey].neighborhoods)])].map((n) => (
               <option key={n}>{n}</option>
             ))}
           </Select>

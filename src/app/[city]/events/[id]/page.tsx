@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
 import { Badge, Button, Card, EmptyState, LIFECYCLE_STEPS, Skeleton, SkeletonText, Stepper, lifecycleIndex, AlertIcon, CalendarIcon } from "@/components/ui";
 import { useAuth } from "@/lib/auth";
+import { useCity } from "@/lib/city";
 import { useRequest, useUser } from "@/lib/hooks";
 import { ActivityTimeline } from "@/components/event/ActivityTimeline";
 import { useEventClock } from "@/components/event/clock";
@@ -32,6 +33,7 @@ function LoadingState() {
 }
 
 export default function EventPage() {
+  const { path } = useCity();
   const { id } = useParams<{ id: string }>();
   const { currentUser, ready } = useAuth();
   const { data: req, loading, error } = useRequest(id);
@@ -45,7 +47,7 @@ export default function EventPage() {
   const { data: lister } = useUser(req?.listerId);
   const { data: host } = useUser(req?.confirmedHostId);
 
-  const back = isLister ? `/lister/requests/${id}` : `/host/requests/${id}`;
+  const back = path(isLister ? `/lister/requests/${id}` : `/host/requests/${id}`);
   const shell = (children: React.ReactNode) => (
     <AppShell title="Day of event" back={req ? back : "/"}>
       <div className="space-y-4 pb-8">{children}</div>
@@ -69,7 +71,7 @@ export default function EventPage() {
         icon={<AlertIcon size={22} />}
         title="This event isn't yours"
         description="Day-of tools are only available to the Lister and the confirmed Host."
-        action={<Button href={`/host/requests/${id}`}>View request</Button>}
+        action={<Button href={path(`/host/requests/${id}`)}>View request</Button>}
       />,
     );
   }

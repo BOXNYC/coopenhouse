@@ -11,7 +11,7 @@ import { BedIcon, BathIcon, ClockIcon, MapPinIcon } from "./ui/icons";
 export function RequestPhoto({ request, className }: { request: OpenHouseRequest; className?: string }) {
   return (
     <div
-      className={cn("relative shrink-0 overflow-hidden rounded-xl", className)}
+      className={cn("relative shrink-0 overflow-hidden rounded-t-xl", className)}
       style={{ background: request.photo.url ? `center/cover url(${request.photo.url})` : request.photo.gradient }}
       aria-hidden="true"
     >

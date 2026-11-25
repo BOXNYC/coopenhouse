@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/icons";
 import * as api from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { useCity } from "@/lib/city";
 import { cn } from "@/lib/cn";
 import { formatCurrency, formatDuration, formatPhone, formatWindow, offerLabel, relativeTime } from "@/lib/format";
 import { useAsync, useMutation, useRequest, useUser } from "@/lib/hooks";
@@ -32,8 +33,9 @@ import {
 import type { OpenHouseRequest, User } from "@/lib/types";
 
 export default function Page() {
+  const { path } = useCity();
   return (
-    <AppShell role="host" title="Request details" back="/host">
+    <AppShell role="host" title="Request details" back={path("/host")}>
       <Detail />
     </AppShell>
   );
@@ -77,6 +79,7 @@ function Row({ icon, children, className }: { icon: ReactNode; children: ReactNo
 }
 
 function Detail() {
+  const { path } = useCity();
   const { id } = useParams<{ id: string }>();
   const { currentUser: me } = useAuth();
   const req = useRequest(id, me?.id);
@@ -98,7 +101,7 @@ function Detail() {
         icon={<AlertIcon size={22} />}
         title="Request not found"
         description="It may have been removed."
-        action={<Button href="/host" variant="secondary">Back to feed</Button>}
+        action={<Button href={path("/host")} variant="secondary">Back to feed</Button>}
       />
     );
   }
@@ -256,6 +259,7 @@ function Banner({ tone, title, text }: { tone: "neutral" | "warn" | "success"; t
 }
 
 function ApplyPanel({ r, me }: { r: OpenHouseRequest; me: User }) {
+  const { path } = useCity();
   const toast = useToast();
   const [agree, setAgree] = useState(false);
   const [broker, setBroker] = useState(false);
@@ -293,8 +297,8 @@ function ApplyPanel({ r, me }: { r: OpenHouseRequest; me: User }) {
             : "The Lister has been notified. You'll hear back soon."}
         </p>
         <div className="mt-3 flex justify-center gap-2">
-          <Button href="/host" variant="outline" size="sm">Back to feed</Button>
-          {done === "claimed" && <Button href={`/events/${r.id}`} size="sm">Open event</Button>}
+          <Button href={path("/host")} variant="outline" size="sm">Back to feed</Button>
+          {done === "claimed" && <Button href={path(`/events/${r.id}`)} size="sm">Open event</Button>}
         </div>
       </Card>
     );
@@ -410,6 +414,7 @@ function ChangePanel({ r, me }: { r: OpenHouseRequest; me: User }) {
 }
 
 function ConfirmedPanel({ r, me, lister }: { r: OpenHouseRequest; me: User; lister?: User }) {
+  const { path } = useCity();
   const showAccess = canViewAccessDetails(r, me.id);
   const showContact = canViewContact(r, me.id);
   const total = r.checklist.length;
@@ -441,7 +446,7 @@ function ConfirmedPanel({ r, me, lister }: { r: OpenHouseRequest; me: User; list
         >
           <CarIcon size={15} /> Directions
         </a>
-        <Button size="sm" href={`/events/${r.id}`}>Open event page</Button>
+        <Button size="sm" href={path(`/events/${r.id}`)}>Open event page</Button>
       </div>
       <div className="rounded-xl bg-surface p-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-muted">Handoff checklist</p>
@@ -453,7 +458,7 @@ function ConfirmedPanel({ r, me, lister }: { r: OpenHouseRequest; me: User; list
           ))}
         </ul>
         {total > 4 && (
-          <Link href={`/events/${r.id}`} className="mt-2 inline-block text-xs font-semibold text-brand-700">
+          <Link href={path(`/events/${r.id}`)} className="mt-2 inline-block text-xs font-semibold text-brand-700">
             See all {total} steps
           </Link>
         )}

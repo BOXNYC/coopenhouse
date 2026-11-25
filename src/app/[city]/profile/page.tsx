@@ -5,8 +5,11 @@ import { Button } from "@/components/ui/Button";
 import { Card, SectionTitle } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useToast } from "@/components/ui/Toast";
-import { getHostAvailability, updateAvailability } from "@/lib/api";
+import { getHostAvailability, updateAvailability, updateUser } from "@/lib/api";
+import { Tabs } from "@/components/ui/Tabs";
 import { useAuth } from "@/lib/auth";
+import { forgetCity, useCity } from "@/lib/city";
+import { userInCity } from "@/lib/rules";
 import { useAsync, useMutation } from "@/lib/hooks";
 import { cn } from "@/lib/cn";
 import { formatCurrency } from "@/lib/format";
@@ -16,10 +19,12 @@ import { useRouter } from "next/navigation";
 const DAYS = ["S", "M", "T", "W", "T", "F", "S"];
 
 export default function ProfilePage() {
-  const { currentUser, role, logout } = useAuth();
+  const { currentUser, mode, logout } = useAuth();
   const router = useRouter();
+  const { key: cityKey } = useCity();
   const toast = useToast();
-  const avail = useAsync(() => getHostAvailability(currentUser!.id), `avail:${currentUser?.id}`, { enabled: !!currentUser && role === "host" });
+  const avail = useAsync(() => getHostAvailability(currentUser!.id), `avail:${currentUser?.id}`, { enabled: !!currentUser && mode === "host" });
+  const saveMode = useMutation(updateUser, { onSuccess: () => toast.success("Default view saved") });
   const save = useMutation(updateAvailability, { onSuccess: () => toast.success("Availability updated") });
 
   return (
@@ -28,7 +33,19 @@ export default function ProfilePage() {
         <div className="space-y-5">
           <TrustCard user={currentUser} variant="expanded" />
 
-          {role === "host" && (
+          <section>
+            <SectionTitle>Default view</SectionTitle>
+            <Card>
+              <p className="mb-3 text-sm text-ink-soft">Which view opens when you sign in. You can switch any time from the header.</p>
+              <Tabs
+                tabs={[{ id: "lister" as const, label: "Lister" }, { id: "host" as const, label: "Host" }]}
+                value={currentUser.defaultMode}
+                onChange={(m) => saveMode.mutate(currentUser.id, { defaultMode: m })}
+              />
+            </Card>
+          </section>
+
+          {mode === "host" && (
             <section id="availability">
               <SectionTitle>Availability and radius</SectionTitle>
               <Card>
@@ -37,7 +54,7 @@ export default function ProfilePage() {
                 ) : (
                   <div className="space-y-4">
                     <p className="text-sm text-ink-soft">
-                      Home area <strong>{currentUser.homeArea}</strong>, within <strong>{currentUser.radiusMiles} miles</strong>.
+                      Home area <strong>{userInCity(currentUser, cityKey).homeArea}</strong>, within <strong>{currentUser.radiusMiles} miles</strong>.
                     </p>
                     <div>
                       <p className="mb-2 text-sm font-medium">Preferred days</p>
@@ -79,6 +96,7 @@ export default function ProfilePage() {
             icon={<LogoutIcon size={18} />}
             onClick={() => {
               logout();
+              forgetCity();
               router.push("/login");
             }}
           >
